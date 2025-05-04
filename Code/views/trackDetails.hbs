@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head> 
+<title> {{title}} </title>
+<style type="text/css">
+
+.button {
+    background-color: #eb6ded;
+    border: 2px solid black;
+    color: black;
+    padding: 10px 14px; 
+    text-align: center;
+    text-decoration: none;
+}
+.button:hover {
+    background-color: #df29e2;
+}
+</style>
+</head>
+<body>
+   <h1>{{title}}</h1>
+   <div> 
+      <img src="{{image track.album.image}}" alt="{{track.album.title}} cover">
+      <input class="button" type="button" id="favouriteSong" value="Favourite">
+      <h2>Track Name: {{track.name}}</h2> 
+      <h3>Artist: {{track.artist.name}}</h3> 
+      <p>Duration: {{toSeconds track.duration}}</p>
+      {{#if track.playcount}}
+         <p>Playcount: {{track.playcount}}</p>
+      {{else}}
+         <p>Playcount: Not available</p>
+      {{/if}}
+      {{#if track.wiki.summary}}
+         <p>{{{track.wiki.summary}}}</p>
+      {{else}}
+         <p>Summary not available</p>
+      {{/if}}
+      <a href='/album/{{encode track.artist.name}}/{{encode track.album.title}}' class="button"> Return to Album</a>
+   </div>
+   <script src='/favouriteSongListeners.js'></script>
+</body>
+</html>

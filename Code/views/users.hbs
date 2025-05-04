@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head> 
+<title> {{title}} </title>
+<style type="text/css">
+.button {
+    background-color: #eb6ded;
+    border: 2px solid black;
+    color: black;
+    padding: 10px 14px; 
+    text-align: center;
+    text-decoration: none;
+}
+.button:hover {
+    background-color: #df29e2;
+}
+</style>
+</head>
+<body>
+   <h1>{{title}}</h1>
+<div> 
+   {{#if isAdmin}}
+      {{#each userEntries}} 
+         {{#if this.isAdmin}}
+         <p>Admin. UserID: {{this.userid}}. Password: {{this.password}}. Favourite Song: {{favourite this.song}}. Favourite Album: {{favourite this.album}}.</a></p> 
+         {{else}}
+         <p>Guest. UserID: {{this.userid}}. Password: {{this.password}}. Favourite Song: {{favourite this.song}}. Favourite Album: {{favourite this.album}}.</a></p> 
+         {{/if}}
+      {{/each}}
+   {{else}}
+      <p>Sorry! Only admins can view user information</p>
+   {{/if}}
+   <a href='/albums' class="button"> Return to Album Search</a>
+</div>
+</body>
+</html>

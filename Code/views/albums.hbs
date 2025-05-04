@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head> 
+  <title> {{title}} </title>
+  <style type="text/css">
+.button {
+    background-color: #eb6ded;
+    border: 2px solid black;
+    color: black;
+    padding: 10px 14px; 
+    text-align: center;
+    text-decoration: none;
+}
+.button:hover {
+    background-color: #df29e2;
+}
+</style>
+</head>
+<body>
+   <h1>{{title}}</h1>
+<div> 
+   <a href='/users' class="button"> User Info (Admins only)</a>
+   <a href='{{favSong}}' class="button"> Favourite Song</a>
+   <a href='{{favAlbum}}' class="button"> Favourite Album</a>
+   <br><br><br>
+   <label for="album">Album:</label>
+   <input type="text" id="album" name="album" value="{{search}}">
+   <input type="button" id="submit" value="Search">
+   {{#each albums}} 
+      <p><a href= '/album/{{encode this.artist}}/{{encode this.name}}'>{{plus @index}}. {{this.name}} by {{this.artist}}</a></p> 
+   {{/each}} 
+</div>
+   <script src='/albumEventListeners.js'></script>
+</body>
+</html>

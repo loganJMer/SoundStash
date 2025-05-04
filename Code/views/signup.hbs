@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head> 
+  <title> Album/Track Finder Signup </title>
+  <style type="text/css">
+
+     .button {
+     background-color: #eb6ded;
+     border: 2px solid black;
+     color: black;
+     padding: 10px 14px; 
+     text-align: center;
+     text-decoration: none;
+     }
+     .button:hover {
+     background-color: #df29e2;
+     }
+     </style>
+</head>
+<body>
+   <h2>Please enter your desired username and password. Hit "sign up" to create a new account and "sign in" to sign in to an existing account</h2>
+   {{#if invalidUsername}}
+        <p>Invalid Username: Already Taken</p>
+   {{/if}}
+   {{#if badLogin}}
+        <p>Username or Password Incorrect</p>
+   {{/if}}
+   {{#if userCreated}}
+        <p>User successfully created! Hit sign in!</p>
+   {{/if}}
+   <label for="username">Username: </label>
+   <input type="text" id="username" name="username"><br><br>
+   <label for="password">Password: </label>
+   <input type="text" id="password" name="password"><br><br>
+   <input class="button" type="button" id="signup" value="Sign up!">
+   <input class="button" type="button" id="signin" value="Sign in!">  
+
+   <script src='/signupEventListeners.js'></script>
+</body>
+</html>
