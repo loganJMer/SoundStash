@@ -1,5 +1,7 @@
-
+require('dotenv').config();
 var http = require('http');
+const cookieParser = require('cookie-parser');
+const jwt = require('jsonwebtoken');
 var express = require('express');
 var path = require('path');
 var favicon = require('serve-favicon');
@@ -42,6 +44,7 @@ function headerLogger(request, response, next){
 //middleware
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.json())
+app.use(cookieParser())
 app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 app.use(logger('dev'));
 

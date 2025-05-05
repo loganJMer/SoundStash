@@ -4,154 +4,126 @@ var url = require('url');
 var sqlite3 = require('sqlite3').verbose(); //verbose provides more detailed stack trace
 var db = new sqlite3.Database('data/userdata');
 
-const API_KEY = '7bda122e59e068345b71d5798a278d9a'
 
-
-exports.signup = function (request, response){
-	let invalidUsername = request.query.context == "userTaken"
+exports.signinPage = function (request, response){
 	let badLogin = request.query.context == "badLogin"
-	let userCreated = request.query.context == "userCreated"
-	response.render('signup', {invalidUsername: invalidUsername, badLogin : badLogin, userCreated: userCreated})
+	response.render('signin', {badLogin : badLogin})
+}
+
+exports.signup = function (request, response) {
+	let invalidUsername = request.query.context == "userTaken"
+	let badEmail = request.query.context == "badEmail"
+	response.render('signup', {invalidUsername: invalidUsername, badEmail: badEmail})
 }
 
 exports.checkUserExists = function (request, response){
 
-	var userExists = false;
-	var userID = request.body.userID
+	var username = request.body.username
+	var email = request.body.email
 	//check database users table for user
-	db.all("SELECT userid FROM users", function(err, rows){
-		for(var i=0; i<rows.length; i++){
-			if(rows[i].userid == userID) {
-				userExists = true
-				break;
-			}
-		}
-		console.log(userExists)
-		response.json({userExists: userExists})
+	db.get("SELECT 1 FROM users WHERE username = ? LIMIT 1", [username], function (err, row) {
+        if (row) {
+            return response.json({ conflict: "username" });
+        }
+        db.get("SELECT 1 FROM users WHERE email = ? LIMIT 1", [email], function (err2, row2) {
+            if (row2) {
+                return response.json({ conflict: "email" });
+            }
+            return response.json({ conflict: null });
+        });
 	});
-
 }
 
 exports.addUser = function (request, response){
-	var userID = request.body.userID
+	var username = request.body.username
+	var email = request.body.email
 	var password = request.body.password
 	
-	const sql = "INSERT INTO users (userid, password, isAdmin, song, album) VALUES (?, ?, ?, ?, ?)";
-	db.run(sql, [userID, password, 0, '/albums', '/albums'], function(err) {
+	const sql = "INSERT INTO users (username, email, password) VALUES (?, ?, ?)";
+	db.run(sql, [username, email, password], function(err) {
 		
-		console.log(`A row has been inserted with userID: ${userID}`);
+		console.log(`A row has been inserted with username: ${username}`);
 		response.json({success: true})
 	});
 }
 
 exports.signin = function (request, response) {
 
-	var auth = request.headers.authorization;
-	// auth is a base64 representation of (username:password)
-	//so we will need to decode the base64
-	if(!auth){
- 	 	//note here the setHeader must be before the writeHead
-		response.setHeader('WWW-Authenticate', 'Basic realm="need to login"');
-        response.writeHead(401, {'Content-Type': 'text/html'});
-		console.log('No authorization found, send 401.');
- 		response.end();
-	}
-	else{
-	    console.log("Authorization Header: " + auth);
-        //decode authorization header
-		// Split on a space, the original auth
-		//looks like  "Basic Y2hhcmxlczoxMjM0NQ==" and we need the 2nd part
-        var tmp = auth.split(' ');
-
-		// create a buffer and tell it the data coming in is base64
-        var buf = Buffer.from(tmp[1], 'base64');
-
-        // read it back out as a string
-        //should look like 'ldnel:secret'
-		var plain_auth = buf.toString();
-        console.log("Decoded Authorization ", plain_auth);
-
-        //extract the userid and password as separate strings
-        var credentials = plain_auth.split(':');      // split on a ':'
-        var username = credentials[0];
-        var password = credentials[1];
-        console.log("User: ", username);
-        console.log("Password: ", password);
-
-		var authorized = false;
-		//check database users table for user
-		db.all("SELECT userid, password FROM users", function(err, rows){
+	var username = response.body.username
+	var email = response.body.email
+	var password = response.body.password
+	if(username){
+		db.all("SELECT username, password FROM users", function(err, rows){
 		for(var i=0; i<rows.length; i++){
-		      if(rows[i].userid == username & rows[i].password == password) authorized = true;
+				if(rows[i].username == username & rows[i].password == password) authorized = true;
 		}
 		if(authorized == false){
- 	 	   //we had an authorization header by the user:password is not valid
-		   response.setHeader('WWW-Authenticate', 'Basic realm="need to login"');
-           response.writeHead(401, {'Content-Type': 'text/html'});
-		   console.log('No authorization found, send 401.');
- 		   response.end();
+			//STAY ON SIGN IN PAGE SEND BAD USERNAME
+			
 		} else{
-		   response.json({auth: true})
-		}
+			const payload = { username };
+
+			// Generate JWT with the secret key from environment variables
+			const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '31d' });  // expires in 31 day
+
+			// Set the token as an HTTP-only cookie
+			response.cookie('auth_token', token, {
+				httpOnly: true,
+				secure: process.env.NODE_ENV === 'production',  // Secure cookie in production
+				maxAge: 24 * 60 * 60 * 31000,  // 1 month expiration
+				sameSite: 'Strict',
+			});
+				response.json({auth: true})
+			}
 		});
+	} else{
+		db.all("SELECT username, email, password FROM users", function(err, rows){
+			for(var i=0; i<rows.length; i++){
+					if(rows[i].email == email & rows[i].password == password) authorized = true;
+			}
+			if(authorized == false){
+				//STAY ON SIGN IN PAGE SEND BAD EMAIL
+				
+			} else{
+				var username = rows[i].username;
+				const payload = { username };
+
+				const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '31d' });  // expires in 31 day
+
+				// Set the token as an HTTP-only cookie
+				response.cookie('auth_token', token, {
+					httpOnly: true,
+					secure: process.env.NODE_ENV === 'production',  // Secure cookie in production
+					maxAge: 24 * 60 * 60 * 31000,  // 1 month expiration
+					sameSite: 'Strict',
+				});
+					
+				}
+			});
 	}
 }
 
+
 exports.authenticate = function (request, response, next){
-    /*
-	Middleware to do BASIC http 401 authentication
-	*/
-    var auth = request.headers.authorization;
-	// auth is a base64 representation of (username:password)
-	//so we will need to decode the base64
-	if(!auth){
-		console.log('No authorization found. Redirecting to signup');
-		response.redirect('/signup?context=auth_failed');
+
+	
+	var auth = false;
+	const token = request.cookies.auth_token;
+	if(!token){
+		request.username = null
+		next()
 	}
-	else{
-	    console.log("Authorization Header: " + auth);
-        //decode authorization header
-		// Split on a space, the original auth
-		//looks like  "Basic Y2hhcmxlczoxMjM0NQ==" and we need the 2nd part
-        var tmp = auth.split(' ');
-
-		// create a buffer and tell it the data coming in is base64
-        var buf = Buffer.from(tmp[1], 'base64');
-
-        // read it back out as a string
-        //should look like 'ldnel:secret'
-		var plain_auth = buf.toString();
-        console.log("Decoded Authorization ", plain_auth);
-
-        //extract the userid and password as separate strings
-        var credentials = plain_auth.split(':');      // split on a ':'
-        var username = credentials[0];
-        var password = credentials[1];
-        console.log("User: ", username);
-        console.log("Password: ", password);
-
-		var authorized = false;
-		//check database users table for user
-		db.all("SELECT userid, password, isAdmin, song, album FROM users", function(err, rows){
-		for(var i=0; i<rows.length; i++){
-		      if(rows[i].userid == username & rows[i].password == password){
-				authorized = true;
-				request.isAdmin = rows[i].isAdmin
-				request.favSong = rows[i].song
-				request.favAlbum = rows[i].album
-			  }
-		}
-		if(authorized == false){
-		    console.log("Invalid credentials. Redirecting to signup")
-			response.redirect("/signup?context=auth_failed");
-		}
-        else
-		  next();
-		});
-	}
-
-	//notice no call to next()
-
+	
+	jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
+        if (err) {
+			request.username = null
+            next()
+        }
+        request.username = decoded;
+        next();  // Continue to the next middleware/route handler
+    });
+	
+	next();
 }
 
 
@@ -177,7 +149,7 @@ exports.favSong = function(request, response){
 	var credentials = plain_auth.split(':');
 	var username = credentials[0];
 
-	const sql = "UPDATE users SET song = ? WHERE userid = ?"
+	const sql = "UPDATE users SET song = ? WHERE username = ?"
 	db.run(sql, [newFavSong, username], function(err){
 		if(err){
 			console.log(err)
@@ -200,7 +172,7 @@ exports.favAlbum = function(request, response){
 	var credentials = plain_auth.split(':');
 	var username = credentials[0];
 
-	const sql = "UPDATE users SET album = ? WHERE userid = ?"
+	const sql = "UPDATE users SET album = ? WHERE username = ?"
 	db.run(sql, [newFavAlbum, username], function(err){
 		if(err){
 			console.log(err)
@@ -213,7 +185,7 @@ exports.favAlbum = function(request, response){
 }
 
 exports.users = function(request, response){
-	db.all("SELECT userid, password, isAdmin, song, album FROM users", function(err, rows){
+	db.all("SELECT username, password, isAdmin, song, album FROM users", function(err, rows){
 		response.render('users', {title : 'Users:', userEntries: rows, isAdmin: request.isAdmin});
 	})
 
