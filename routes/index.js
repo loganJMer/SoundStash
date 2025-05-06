@@ -4,20 +4,8 @@ var url = require('url');
 var sqlite3 = require('sqlite3').verbose(); //verbose provides more detailed stack trace
 var db = new sqlite3.Database('data/userdata');
 
-
-exports.signinPage = function (request, response){
-	let badLogin = request.query.context == "badLogin"
-	response.render('signin', {badLogin : badLogin})
-}
-
-exports.signup = function (request, response) {
-	let invalidUsername = request.query.context == "userTaken"
-	let badEmail = request.query.context == "badEmail"
-	response.render('signup', {invalidUsername: invalidUsername, badEmail: badEmail})
-}
-
 exports.checkUserExists = function (request, response){
-
+	console.log("Checking if user exists")
 	var username = request.body.username
 	var email = request.body.email
 	//check database users table for user
@@ -49,16 +37,17 @@ exports.addUser = function (request, response){
 
 exports.signin = function (request, response) {
 
-	var username = response.body.username
-	var email = response.body.email
-	var password = response.body.password
+	var username = request.body.username
+	var email = request.body.email
+	var password = request.body.password
+	var authorized = false
 	if(username){
 		db.all("SELECT username, password FROM users", function(err, rows){
 		for(var i=0; i<rows.length; i++){
 				if(rows[i].username == username & rows[i].password == password) authorized = true;
 		}
 		if(authorized == false){
-			//STAY ON SIGN IN PAGE SEND BAD USERNAME
+			response.json({auth: false})
 			
 		} else{
 			const payload = { username };

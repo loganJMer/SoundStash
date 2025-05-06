@@ -1,48 +1,23 @@
 {
-  
-  "name": "soundstash",
-  
-  "version": "1.0.0",
-  
-  "description": "Vinyl collection and sharing website",
-  
-  "main": "server.js",
-  
-  "scripts": {
-  
-    
-  "start": "concurrently \"npm run server\" \"npm run client\"",
-  
-    
-  "client": "npm start --prefix client",
-  
-    
-  "server": "node server.js"
-  
-  },
-  
-  "dependencies": {
-  
-    
-  "cookie-parser": "^1.4.7",
-  
-    
-  "dotenv": "^16.5.0",
-  
-    
-  "express": "^4.21.2",
-  
-    
-  "hbs": "^4.2.0",
-  
-    
-  "morgan": "^1.10.0",
-  
-    
-  "serve-favicon": "^2.5.0",
-  
-    
-  "sqlite3": "^5.1.7"
-  
-  }
+    "name": "soundstash",
+    "version": "1.0.0",
+    "description": "Vinyl collection and sharing website",
+    "main": "server.js",
+    "scripts": {
+        "start": "concurrently \"npm run server\" \"npm run client\"",
+        "client": "npm start --prefix client",
+        "server": "node server.js"
+    },
+    "dependencies": {
+        "axios": "^1.9.0",
+        "concurrently": "^9.1.2",
+        "cookie-parser": "^1.4.7",
+        "dotenv": "^16.5.0",
+        "express": "^4.21.2",
+        "hbs": "^4.2.0",
+        "jsonwebtoken": "^9.0.2",
+        "morgan": "^1.10.0",
+        "serve-favicon": "^2.5.0",
+        "sqlite3": "^5.1.7"
+    }
 }

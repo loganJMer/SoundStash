@@ -48,11 +48,10 @@ app.use(cookieParser())
 app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 app.use(logger('dev'));
 
-app.get('/signup', routes.signup);
-app.post('/checkUserExists', routes.checkUserExists);
-app.post('/addUser', routes.addUser);
-app.post('/signin', routes.signin);
-app.use(routes.authenticate); //authenticate user
+app.post('/api/checkUserExists', routes.checkUserExists);
+app.post('/api/addUser', routes.addUser);
+app.post('/api/signin', routes.signin);
+//app.use(routes.authenticate); //authenticate user
 
 //routes
 app.post('/favSong', routes.favSong)
@@ -67,10 +66,7 @@ app.listen(PORT, err => {
   if(err) console.log(err)
   else {
 		console.log(`Server listening on port: ${PORT} CNTL:-C to stop`)
-		console.log(`To Test:`)
-		console.log('Admin.   user: ldnel password: secret')
-		console.log('Guest.   user: frank password: secret2')
 		console.log('Or make your own user')
-		console.log('http://localhost:3000/albums')
+		console.log('http://localhost:3000/')
 	}
 })
