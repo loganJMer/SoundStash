@@ -3,6 +3,7 @@ var http = require('http');
 var hbs = require('hbs');
 var url = require('url');
 const jwt = require('jsonwebtoken');
+const axios = require('axios');
 var sqlite3 = require('sqlite3').verbose(); //verbose provides more detailed stack trace
 var db = new sqlite3.Database('data/userdata');
 
@@ -136,6 +137,29 @@ function parseURL(request, response){
     //for(x in urlObj.query) console.log(x + ': ' + urlObj.query[x]);
 	return urlObj;
 
+}
+
+
+exports.search = async function(request, response) {
+	var searchTerm = request.query.searchTerm || ''
+	var searchType = request.query.searchType || 'release_title'
+	try {
+		const response = await axios.get('https://api.discogs.com/database/search', {
+		  params: {
+			[searchType]: searchTerm,
+			key: DISCOGS_KEY,
+			secret: DISCOGS_SECRET,
+		  },
+		  headers: {
+			'User-Agent': 'soundstash/1.0',
+		  },
+		});
+	
+		res.json(response.data);
+	  } catch (error) {
+		console.error('Discogs API error:', error.message);
+		res.status(500).json({ error: 'Discogs API error', details: error.message });
+	  }
 }
 
 exports.favSong = function(request, response){

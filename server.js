@@ -52,22 +52,16 @@ app.post('/api/addUser', routes.addUser);
 app.post('/api/signin', routes.signin);
 app.get('/api/verifyToken', routes.verifyToken); //verify token
 app.post('/api/logout', routes.logout); //logout user
+app.get('/api/search', routes.search); //search discogs
 
 //app.use(routes.authenticate); //authenticate user
 
-app.post('/favSong', routes.favSong)
-app.post('/favAlbum', routes.favAlbum)
-app.get('/albums*', routes.getAlbums);
-app.get('/users', routes.users);
-app.get('/album/*', routes.albumDetails);
-app.get('/track/*', routes.trackDetails);
+
 
 //start server
 app.listen(PORT, err => {
   if(err) console.log(err)
   else {
 		console.log(`Server listening on port: ${PORT} CNTL:-C to stop`)
-		console.log('Or make your own user')
-		console.log('http://localhost:3000/')
 	}
 })

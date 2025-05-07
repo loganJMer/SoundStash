@@ -117,7 +117,7 @@ const Signin = () => {
                     </button>
                 </form><br></br>
                 <p style={{ textAlign: 'center' }}>Don't have an account?</p>
-                <a href='/signup' style={{ color: 'white'}} class>Click here to create new account</a>
+                <a href='/signup' style={{ color: 'white'}}>Click here to create new account</a>
             </div>
         </div>
     );

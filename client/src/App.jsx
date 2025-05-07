@@ -6,6 +6,7 @@ import Signup from './pages/Signup';
 import Main from './pages/Main';
 import Header from './components/Header';
 import Footer from './components/Footer';
+import Search from './pages/Search';
 
 function App() {
   return (
@@ -17,6 +18,13 @@ function App() {
           <>
             <Header />
             <Main />
+            <Footer />
+          </>
+        } />
+        <Route path="/search" element={
+          <>
+            <Header />
+            <Search />
             <Footer />
           </>
         } />

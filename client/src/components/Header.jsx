@@ -36,8 +36,8 @@ const Header = () => {
   };
 
   return (
-    <div>
-      <nav style={{ position: 'relative', zIndex: 2 }}>
+    <div style={{ width: '100vw', position: 'fixed', top: 0, left: 0, zIndex: 1000 }}>
+      <nav style={{ width: '100%' }}>
         <ul>
           <li style={{ display: 'inline-block' }}>
             <a href="/" className="logo-link">
@@ -98,6 +98,9 @@ const Header = () => {
       </nav>
       <style>
         {`
+          body {
+            margin: 0;
+          }
           ul {
             list-style-type: none;
             margin: 0;
@@ -106,6 +109,7 @@ const Header = () => {
             background-color: #e0753d;
             display: flex;
             align-items: center;
+            width: 100vw;
           }
 
           li {
