@@ -1,7 +1,6 @@
 require('dotenv').config();
 var http = require('http');
 const cookieParser = require('cookie-parser');
-const jwt = require('jsonwebtoken');
 var express = require('express');
 var path = require('path');
 var favicon = require('serve-favicon');
@@ -51,9 +50,11 @@ app.use(logger('dev'));
 app.post('/api/checkUserExists', routes.checkUserExists);
 app.post('/api/addUser', routes.addUser);
 app.post('/api/signin', routes.signin);
+app.get('/api/verifyToken', routes.verifyToken); //verify token
+app.post('/api/logout', routes.logout); //logout user
+
 //app.use(routes.authenticate); //authenticate user
 
-//routes
 app.post('/favSong', routes.favSong)
 app.post('/favAlbum', routes.favAlbum)
 app.get('/albums*', routes.getAlbums);

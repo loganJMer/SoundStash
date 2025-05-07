@@ -1,8 +1,12 @@
+require('dotenv').config({ path: require('path').resolve(__dirname, '../.env') });
 var http = require('http');
 var hbs = require('hbs');
 var url = require('url');
+const jwt = require('jsonwebtoken');
 var sqlite3 = require('sqlite3').verbose(); //verbose provides more detailed stack trace
 var db = new sqlite3.Database('data/userdata');
+
+
 
 exports.checkUserExists = function (request, response){
 	console.log("Checking if user exists")
@@ -36,12 +40,12 @@ exports.addUser = function (request, response){
 }
 
 exports.signin = function (request, response) {
-
-	var username = request.body.username
-	var email = request.body.email
+	console.log("Checking credentials")
+	var usernameEmail = request.body.usernameEmail
 	var password = request.body.password
 	var authorized = false
-	if(username){
+	if(!usernameEmail.includes("@")){
+		var username = usernameEmail
 		db.all("SELECT username, password FROM users", function(err, rows){
 		for(var i=0; i<rows.length; i++){
 				if(rows[i].username == username & rows[i].password == password) authorized = true;
@@ -50,70 +54,75 @@ exports.signin = function (request, response) {
 			response.json({auth: false})
 			
 		} else{
-			const payload = { username };
 
 			// Generate JWT with the secret key from environment variables
-			const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '31d' });  // expires in 31 day
+			const token = jwt.sign({username: username}, process.env.JWT_SECRET, { expiresIn: '31d' });  // expires in 31 day
 
 			// Set the token as an HTTP-only cookie
 			response.cookie('auth_token', token, {
 				httpOnly: true,
 				secure: process.env.NODE_ENV === 'production',  // Secure cookie in production
 				maxAge: 24 * 60 * 60 * 31000,  // 1 month expiration
-				sameSite: 'Strict',
+				sameSite: 'Lax',
 			});
 				response.json({auth: true})
 			}
 		});
 	} else{
+		var email = usernameEmail
 		db.all("SELECT username, email, password FROM users", function(err, rows){
 			for(var i=0; i<rows.length; i++){
-					if(rows[i].email == email & rows[i].password == password) authorized = true;
+					if(rows[i].email == email & rows[i].password == password) {
+						authorized = true;
+						var username = rows[i].username;
+						break;
+					}
 			}
 			if(authorized == false){
-				//STAY ON SIGN IN PAGE SEND BAD EMAIL
+				response.json({auth: false})
 				
 			} else{
-				var username = rows[i].username;
-				const payload = { username };
+				
+				const token = jwt.sign({username: username}, process.env.JWT_SECRET, { expiresIn: '31d' });  // expires in 31 day
 
-				const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '31d' });  // expires in 31 day
-
-				// Set the token as an HTTP-only cookie
+			// Set the token as an HTTP-only cookie
 				response.cookie('auth_token', token, {
 					httpOnly: true,
 					secure: process.env.NODE_ENV === 'production',  // Secure cookie in production
 					maxAge: 24 * 60 * 60 * 31000,  // 1 month expiration
-					sameSite: 'Strict',
+					sameSite: 'Lax',
 				});
-					
-				}
-			});
+					response.json({auth: true});
+			}
+		});
 	}
 }
 
-
-exports.authenticate = function (request, response, next){
-
-	
-	var auth = false;
+exports.verifyToken = function (request, response){
 	const token = request.cookies.auth_token;
-	if(!token){
-		request.username = null
-		next()
+	if (!token) {
+		console.log("No token provided")
+		return response.json({ valid: false });
 	}
-	
 	jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
-        if (err) {
-			request.username = null
-            next()
-        }
-        request.username = decoded;
-        next();  // Continue to the next middleware/route handler
-    });
-	
-	next();
+		if (err) {
+			console.log("Token invalid")
+			return response.json({ valid: false });
+		}
+		response.json({ valid: true , username: decoded.username });
+	});
 }
+
+exports.logout = function (request, response) {
+	console.log("Logging out")
+    response.clearCookie('auth_token', {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'Lax',
+    });
+    response.json({ success: true });
+}
+
 
 
 function parseURL(request, response){
