@@ -11,10 +11,10 @@ const Signin = () => {
 
     useEffect(() => {
         axios.get('/api/verifyToken', { withCredentials: true })
-            .then(response => {
-                console.log(response.data.valid)
-                if (response.data.valid) {
-                    console.log('Username:', response.data.username);
+            .then(res => {
+                console.log(res.data.valid)
+                if (res.data.valid) {
+                    console.log('Username:', res.data.username);
                     navigate('/');
                 } else {
                     console.log('Invalid or expired token.');
@@ -35,11 +35,11 @@ const Signin = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         console.log("Checking credentials")
-        const response = await axios.post('/api/signin', {
+        const res = await axios.post('/api/signin', {
             usernameEmail: usernameEmail,
             password: password
         });
-        if (response.data.auth === true) {  
+        if (res.data.auth === true) {  
             console.log("User successfully signed in!")
             window.location.href = '/';
         } else {

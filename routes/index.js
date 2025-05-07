@@ -4,46 +4,47 @@ var hbs = require('hbs');
 var url = require('url');
 const jwt = require('jsonwebtoken');
 const axios = require('axios');
+const { release } = require('os');
 var sqlite3 = require('sqlite3').verbose(); //verbose provides more detailed stack trace
 var db = new sqlite3.Database('data/userdata');
 
 
 
-exports.checkUserExists = function (request, response){
+exports.checkUserExists = function (req, res){
 	console.log("Checking if user exists")
-	var username = request.body.username
-	var email = request.body.email
+	var username = req.body.username
+	var email = req.body.email
 	//check database users table for user
 	db.get("SELECT 1 FROM users WHERE username = ? LIMIT 1", [username], function (err, row) {
         if (row) {
-            return response.json({ conflict: "username" });
+            return res.json({ conflict: "username" });
         }
         db.get("SELECT 1 FROM users WHERE email = ? LIMIT 1", [email], function (err2, row2) {
             if (row2) {
-                return response.json({ conflict: "email" });
+                return res.json({ conflict: "email" });
             }
-            return response.json({ conflict: null });
+            return res.json({ conflict: null });
         });
 	});
 }
 
-exports.addUser = function (request, response){
-	var username = request.body.username
-	var email = request.body.email
-	var password = request.body.password
+exports.addUser = function (req, res){
+	var username = req.body.username
+	var email = req.body.email
+	var password = req.body.password
 	
 	const sql = "INSERT INTO users (username, email, password) VALUES (?, ?, ?)";
 	db.run(sql, [username, email, password], function(err) {
 		
 		console.log(`A row has been inserted with username: ${username}`);
-		response.json({success: true})
+		res.json({success: true})
 	});
 }
 
-exports.signin = function (request, response) {
+exports.signin = function (req, res) {
 	console.log("Checking credentials")
-	var usernameEmail = request.body.usernameEmail
-	var password = request.body.password
+	var usernameEmail = req.body.usernameEmail
+	var password = req.body.password
 	var authorized = false
 	if(!usernameEmail.includes("@")){
 		var username = usernameEmail
@@ -52,7 +53,7 @@ exports.signin = function (request, response) {
 				if(rows[i].username == username & rows[i].password == password) authorized = true;
 		}
 		if(authorized == false){
-			response.json({auth: false})
+			res.json({auth: false})
 			
 		} else{
 
@@ -60,13 +61,13 @@ exports.signin = function (request, response) {
 			const token = jwt.sign({username: username}, process.env.JWT_SECRET, { expiresIn: '31d' });  // expires in 31 day
 
 			// Set the token as an HTTP-only cookie
-			response.cookie('auth_token', token, {
+			res.cookie('auth_token', token, {
 				httpOnly: true,
 				secure: process.env.NODE_ENV === 'production',  // Secure cookie in production
 				maxAge: 24 * 60 * 60 * 31000,  // 1 month expiration
 				sameSite: 'Lax',
 			});
-				response.json({auth: true})
+				res.json({auth: true})
 			}
 		});
 	} else{
@@ -80,56 +81,56 @@ exports.signin = function (request, response) {
 					}
 			}
 			if(authorized == false){
-				response.json({auth: false})
+				res.json({auth: false})
 				
 			} else{
 				
 				const token = jwt.sign({username: username}, process.env.JWT_SECRET, { expiresIn: '31d' });  // expires in 31 day
 
 			// Set the token as an HTTP-only cookie
-				response.cookie('auth_token', token, {
+				res.cookie('auth_token', token, {
 					httpOnly: true,
 					secure: process.env.NODE_ENV === 'production',  // Secure cookie in production
 					maxAge: 24 * 60 * 60 * 31000,  // 1 month expiration
 					sameSite: 'Lax',
 				});
-					response.json({auth: true});
+					res.json({auth: true});
 			}
 		});
 	}
 }
 
-exports.verifyToken = function (request, response){
-	const token = request.cookies.auth_token;
+exports.verifyToken = function (req, res){
+	const token = req.cookies.auth_token;
 	if (!token) {
 		console.log("No token provided")
-		return response.json({ valid: false });
+		return res.json({ valid: false });
 	}
 	jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
 		if (err) {
 			console.log("Token invalid")
-			return response.json({ valid: false });
+			return res.json({ valid: false });
 		}
-		response.json({ valid: true , username: decoded.username });
+		res.json({ valid: true , username: decoded.username });
 	});
 }
 
-exports.logout = function (request, response) {
+exports.logout = function (req, res) {
 	console.log("Logging out")
-    response.clearCookie('auth_token', {
+    res.clearCookie('auth_token', {
         httpOnly: true,
         secure: process.env.NODE_ENV === 'production',
         sameSite: 'Lax',
     });
-    response.json({ success: true });
+    res.json({ success: true });
 }
 
 
 
-function parseURL(request, response){
+function parseURL(req, res){
 	var parseQuery = true; //parseQueryStringIfTrue
     var slashHost = true; //slashDenoteHostIfTrue
-    var urlObj = url.parse(request.url, parseQuery , slashHost );
+    var urlObj = url.parse(req.url, parseQuery , slashHost );
     console.log('path:');
     console.log(urlObj.path);
     console.log('query:');
@@ -140,31 +141,31 @@ function parseURL(request, response){
 }
 
 
-exports.search = async function(request, response) {
-	var searchTerm = request.query.searchTerm || ''
-	var searchType = request.query.searchType || 'release_title'
+exports.search = async function(req, res) {
+
 	try {
-		const response = await axios.get('https://api.discogs.com/database/search', {
+		const discogsRes = await axios.get('https://api.discogs.com/database/search', {
 		  params: {
-			[searchType]: searchTerm,
-			key: DISCOGS_KEY,
-			secret: DISCOGS_SECRET,
+			artist: req.query.artist,
+			release_title: req.query.release_title,
+			key: process.env.CONSUMER_KEY,
+			secret: process.env.CONSUMER_SECRET,
 		  },
 		  headers: {
 			'User-Agent': 'soundstash/1.0',
 		  },
 		});
 	
-		res.json(response.data);
+		res.json(discogsRes.data);
 	  } catch (error) {
 		console.error('Discogs API error:', error.message);
 		res.status(500).json({ error: 'Discogs API error', details: error.message });
 	  }
 }
 
-exports.favSong = function(request, response){
-	let newFavSong = request.body.song
-	var auth = request.headers.authorization;
+exports.favSong = function(req, res){
+	let newFavSong = req.body.song
+	var auth = req.headers.authorization;
 	var tmp = auth.split(' ');
 	var buf = Buffer.from(tmp[1], 'base64');
 	var plain_auth = buf.toString();
@@ -175,19 +176,19 @@ exports.favSong = function(request, response){
 	db.run(sql, [newFavSong, username], function(err){
 		if(err){
 			console.log(err)
-			response.json({success: false})
+			res.json({success: false})
 		} else{
 			console.log("Fav song for " + username + "updated")
-			response.json({success: true})
+			res.json({success: true})
 		}
 	})
 	
 }
 
-exports.favAlbum = function(request, response){
-	let newFavAlbum = request.body.album
+exports.favAlbum = function(req, res){
+	let newFavAlbum = req.body.album
 	console.log("NEW FAV album: " + newFavAlbum)
-	var auth = request.headers.authorization;
+	var auth = req.headers.authorization;
 	var tmp = auth.split(' ');
 	var buf = Buffer.from(tmp[1], 'base64');
 	var plain_auth = buf.toString();
@@ -198,23 +199,23 @@ exports.favAlbum = function(request, response){
 	db.run(sql, [newFavAlbum, username], function(err){
 		if(err){
 			console.log(err)
-			response.json({success: false})
+			res.json({success: false})
 		} else{
 			console.log("Fav album for " + username + " updated")
-			response.json({success: true})
+			res.json({success: true})
 		}
 	})
 }
 
-exports.users = function(request, response){
+exports.users = function(req, res){
 	db.all("SELECT username, password, isAdmin, song, album FROM users", function(err, rows){
-		response.render('users', {title : 'Users:', userEntries: rows, isAdmin: request.isAdmin});
+		res.render('users', {title : 'Users:', userEntries: rows, isAdmin: req.isAdmin});
 	})
 
 }
 
-exports.getAlbums = function(request, response) {
-	var urlObj = parseURL(request, response);
+exports.getAlbums = function(req, res) {
+	var urlObj = parseURL(req, res);
 	var path = urlObj.path; //expected form: /albums/albumName
 	if(path === "/albums" || path === "/albums/"){
 		albumName = " "
@@ -224,24 +225,24 @@ exports.getAlbums = function(request, response) {
 
 	let url = 'http://ws.audioscrobbler.com/2.0/?method=album.search&album='+ albumName + '&api_key=' + API_KEY + '&format=json'
   
-	http.request(url, function(apiResponse) {
+	http.req(url, function(apires) {
 	  let albumData = ''
 
-	  apiResponse.on('data', function(chunk) {
+	  apires.on('data', function(chunk) {
 		albumData += chunk
 	  })
-	  apiResponse.on('end', function() {
+	  apires.on('end', function() {
 		let albums = JSON.parse(albumData)
 		if(albums.results && albums.results.albummatches){
 			const matchedAlbums = albums.results.albummatches.album
-			response.render('albums', {title: 'Albums', albums: matchedAlbums, search: decodeURIComponent(albumName), favSong: request.favSong, favAlbum: request.favAlbum})
+			res.render('albums', {title: 'Albums', albums: matchedAlbums, search: decodeURIComponent(albumName), favSong: req.favSong, favAlbum: req.favAlbum})
 		}
 	  })
 	}).end() 
 }
 
-exports.albumDetails = function(request, response) {
-	var urlObj = parseURL(request, response)
+exports.albumDetails = function(req, res) {
+	var urlObj = parseURL(req, res)
 	var path = urlObj.path
 	var name = decodeURIComponent(path.slice(path.lastIndexOf('/') + 1))
 	path = path.slice(0, path.lastIndexOf('/'))
@@ -249,41 +250,41 @@ exports.albumDetails = function(request, response) {
 
 	let url = 'http://ws.audioscrobbler.com/2.0/?method=album.getinfo&api_key=' + API_KEY + '&artist=' + artist + '&album=' + name + '&format=json'
 
-	http.request(url, function(apiResponse) {
+	http.req(url, function(apires) {
 		let albumData = ''
   
-		apiResponse.on('data', function(chunk) {
+		apires.on('data', function(chunk) {
 		  albumData += chunk
 		})
-		apiResponse.on('end', function() {
+		apires.on('end', function() {
 			
 		let album = JSON.parse(albumData).album
 		if(album){
-			response.render('albumDetails', {title: 'Album Details', album: album})
+			res.render('albumDetails', {title: 'Album Details', album: album})
 		}
 		})
 	  }).end() 
 }
 
-exports.trackDetails = function(request, response) {
-	var urlObj = parseURL(request, response)
+exports.trackDetails = function(req, res) {
+	var urlObj = parseURL(req, res)
 	var path = urlObj.path
 	var name = decodeURIComponent(path.slice(path.lastIndexOf('/') + 1))
 	path = path.slice(0, path.lastIndexOf('/'))
 	var artist = decodeURIComponent(path.slice(path.lastIndexOf('/') + 1))
 
 	let url = 'http://ws.audioscrobbler.com/2.0/?method=track.getinfo&api_key=' + API_KEY + '&artist=' + artist + '&track=' + name + '&format=json'
-	http.request(url, function(apiResponse) {
+	http.req(url, function(apires) {
 		let trackData = ''
   
-		apiResponse.on('data', function(chunk) {
+		apires.on('data', function(chunk) {
 		  trackData += chunk
 		})
-		apiResponse.on('end', function() {
+		apires.on('end', function() {
 			
 		let track = JSON.parse(trackData).track
 		if(track){
-			response.render('trackDetails', {title: 'Track Details', track: track})
+			res.render('trackDetails', {title: 'Track Details', track: track})
 		}
 		})
 	  }).end() 

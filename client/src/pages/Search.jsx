@@ -5,15 +5,15 @@ import React, { useState, useEffect } from 'react';
 //implement caching
 const Search = () => {
     const [searchTerm, setSearchTerm] = useState('');
-    const [searchType, setSearchType] = useState('release_title');
     const [results, setResults] = useState([]);
     
     const searchDiscogs = async () => {
         try {
-        const response = await axios.get(`/api/search`, {
-            params: { searchTerm: searchTerm, searchType: searchType },
+        const res = await axios.get(`/api/search`, {
+            params: { artist: searchTerm.artist, release_title: searchTerm.release_title },
         });
-        setResults(response.data.results);
+        console.log(res.data.results)
+        setResults(res.data.results);
         } catch (error) {
         console.error('Error fetching from backend:', error);
         }
@@ -30,20 +30,18 @@ const Search = () => {
             >
                 <input
                     type="text"
-                    value={searchTerm}
-                    onChange={e => setSearchTerm(e.target.value)}
-                    placeholder="Search..."
+                    value={searchTerm.artist || ''}
+                    onChange={e => setSearchTerm(prev => ({ ...prev, artist: e.target.value }))}
+                    placeholder="Artist"
                     style={{ marginRight: '0.5rem' }}
                 />
-                <select
-                    value={searchType}
-                    onChange={e => setSearchType(e.target.value)}
+                <input
+                    type="text"
+                    value={searchTerm.release_title || ''}
+                    onChange={e => setSearchTerm(prev => ({ ...prev, release_title: e.target.value }))}
+                    placeholder="Release Title"
                     style={{ marginRight: '0.5rem' }}
-                >
-                    <option value="release_title">Title</option>
-                    <option value="artist">Artist</option>
-                    <option value="release_year">Release Year</option>
-                </select>
+                />
                 <button type="submit">Search</button>
             </form>
         </div>

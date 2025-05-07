@@ -7,12 +7,12 @@ const Header = () => {
 
   useEffect(() => {
     axios.get('/api/verifyToken', { withCredentials: true })
-        .then(response => {
-            console.log(response.data.valid)
-            if (response.data.valid) {
+        .then(res => {
+            console.log(res.data.valid)
+            if (res.data.valid) {
                 setLoggedIn(true);
-                setUsername(response.data.username);
-                console.log('Username:', response.data.username);
+                setUsername(res.data.username);
+                console.log('Username:', res.data.username);
             } else {
                 console.log('Invalid or expired token.');
                 

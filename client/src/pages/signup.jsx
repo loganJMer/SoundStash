@@ -14,10 +14,10 @@ const Signup = () => {
     useEffect(() => {
 
         axios.get('/api/verifyToken', { withCredentials: true })
-            .then(response => {
-                console.log(response.data.valid)
-                if (response.data.valid) {
-                    console.log('Username:', response.data.username);
+            .then(res => {
+                console.log(res.data.valid)
+                if (res.data.valid) {
+                    console.log('Username:', res.data.username);
                     navigate('/');
                 } else {
                     console.log('Invalid or expired token.');
@@ -54,33 +54,35 @@ const Signup = () => {
         }
         console.log("Formatting valid. Checking if user already exists")
 	
-        const response = await axios.post('/api/checkUserExists', {
+        const res = await axios.post('/api/checkUserExists', {
             username: username,
             email: email,
         });
-        let conflict = response.data.conflict
+        let conflict = res.data.conflict
         if(conflict === "username"){
             console.log("Username taken. Redirecting with context")
             setErrorMessage("Username already taken. Please choose another one.")
+            return
         } else if(conflict === "email"){
             console.log("Email taken. Redirecting with context")
             setErrorMessage("Email already taken. Please choose another one.")
+            return
         } else{
             console.log("Username and email not taken. Creating user")}
-            let response2 = await axios.post('/api/addUser', {
+            let res2 = await axios.post('/api/addUser', {
                 username: username,
                 email: email,
                 password: password
             });
-            let success = response2.data.success
+            let success = res2.data.success
             if(success){
                 console.log("User successfully created!")
-                const response3 = await axios.post('/api/signin', {
+                const res3 = await axios.post('/api/signin', {
                     usernameEmail: username,
                     password: password
         
                 });
-                if (response3.data.auth === true) {  
+                if (res3.data.auth === true) {  
                     window.location.href = '/';
                 }
             }
