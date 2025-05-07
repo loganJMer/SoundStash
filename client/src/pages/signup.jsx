@@ -120,6 +120,10 @@ const Signup = () => {
                     transform: scale(1.1);
                     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
                 }
+
+                a:hover {
+                    text-decoration: underline;
+                }
             `}
             </style>
             <img src="FullLogo.png" alt="Logo" /><br></br>
@@ -162,6 +166,8 @@ const Signup = () => {
                         Sign Up
                     </button>
                 </form>
+                <p style={{ textAlign: 'center' }}>Already have an account?</p>
+                <a href='/signin' style={{ color: 'white'}} class>Click here to sign in</a>
             </div>
         </div>
     );
