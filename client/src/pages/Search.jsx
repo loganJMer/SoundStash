@@ -20,30 +20,93 @@ const Search = () => {
     };
 
     return (
-        <div>
-            <form
-                onSubmit={e => {
-                    e.preventDefault();
-                    searchDiscogs();
+        <div style={{
+            background: '#fff',
+            minHeight: '100vh',
+            width: '100vw',
+            padding: '2rem',
+            boxSizing: 'border-box',
+            margin: 0,
+            position: 'fixed',
+            top: 44,
+            left: 0
+        }}>
+            <style>
+                {`
+                    input {
+                        margin-right: 0.5rem;
+                        width: 25%;
+                        min-width: 100px;
+                        max-width: 300px;
+                        padding: 0.6rem 0.5rem;
+                        background: #fff;
+                        color: #000;
+                        border: 1px solid #d3d3d3;
+                        border-radius: 10px;
+                        box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+                        outline: none;
+                    }
+                    button {
+                        padding: 10px 15px;
+                        background-color: #e37609;
+                        color: #fff;
+                        border-width: 1px;
+                        border-color: white;
+                        border-radius: 10px;
+                        cursor: pointer;
+                        transition: background-color 0.3s ease, transform 0.2s ease;
+                    }   
+                    button:hover {
+                        background-color: #c65d07;
+                        border-color: white;
+                        transform: scale(1.1);
+                        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+                    }
+                `}
+            </style>
+            <div
+                style={{
+                    background: '#f6b648',
+                    borderRadius: '12px',
+                    boxShadow: '0 4px 16px rgba(0,0,0,0.10), 0 1.5px 4px rgba(0,0,0,0.08)',
+                    padding: '2rem',
+                    width: '100%',
+                    maxWidth: 'none',
+                    margin: '0 auto 2rem auto',
+                    border: '1px solid #e0e0e0',
+                    boxSizing: 'border-box'
                 }}
-                style={{ marginBottom: '1rem' }}
             >
-                <input
-                    type="text"
-                    value={searchTerm.artist || ''}
-                    onChange={e => setSearchTerm(prev => ({ ...prev, artist: e.target.value }))}
-                    placeholder="Artist"
-                    style={{ marginRight: '0.5rem' }}
-                />
-                <input
-                    type="text"
-                    value={searchTerm.release_title || ''}
-                    onChange={e => setSearchTerm(prev => ({ ...prev, release_title: e.target.value }))}
-                    placeholder="Release Title"
-                    style={{ marginRight: '0.5rem' }}
-                />
-                <button type="submit">Search</button>
-            </form>
+                <form
+                    onSubmit={e => {
+                        e.preventDefault();
+                        searchDiscogs();
+                    }}
+                    style={{
+                        display: 'flex',
+                        alignItems: 'flex-start',
+                        gap: '0.5rem',
+                        marginBottom: 0,
+                        maxWidth: '100%',
+                        justifyContent: 'flex-start'
+                    }}
+                >
+                    <input
+                        type="text"
+                        value={searchTerm.artist || ''}
+                        onChange={e => setSearchTerm(prev => ({ ...prev, artist: e.target.value }))}
+                        placeholder="Artist"
+                    />  
+                    <input
+                        type="text"
+                        value={searchTerm.release_title || ''}
+                        onChange={e => setSearchTerm(prev => ({ ...prev, release_title: e.target.value }))}
+                        placeholder="Release Title"
+                    />
+                    <button type="submit">Search</button>
+                </form>
+            </div>
+            {/* Results will be rendered below here */}
         </div>
     );
 };

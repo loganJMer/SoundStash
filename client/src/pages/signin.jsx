@@ -58,31 +58,31 @@ const Signin = () => {
                         background-color: #fff;
                         color: #000;
                     }
-                        img {
+                    img {
                         max-width: 100%;
                         height: auto;
                         display: block;
                         margin: 0 auto;
                     }
-                        button {
-                    padding: 10px 15px;
-                    background-color: #e37609;
-                    color: #fff;
-                    border-width: 1px;
-                    border-color: white;
-                    border-radius: 10px;
-                    cursor: pointer;
-                    transition: background-color 0.3s ease, transform 0.2s ease;
-                }
-                button:hover {
-                    background-color: #c65d07;
-                    border-color: white;
-                    transform: scale(1.1);
-                    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-                }
-                a:hover {
-                    text-decoration: underline;
-                }
+                    button {
+                        padding: 10px 15px;
+                        background-color: #e37609;
+                        color: #fff;
+                        border-width: 1px;
+                        border-color: white;
+                        border-radius: 10px;
+                        cursor: pointer;
+                        transition: background-color 0.3s ease, transform 0.2s ease;
+                    }
+                    button:hover {
+                        background-color: #c65d07;
+                        border-color: white;
+                        transform: scale(1.1);
+                        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+                    }
+                    a:hover {
+                        text-decoration: underline;
+                    }
             `}
             </style>
             <img src="FullLogo.png" alt="Logo" /><br></br>
