@@ -144,16 +144,25 @@ function parseURL(req, res){
 exports.search = async function(req, res) {
 
 	try {
-		const discogsRes = await axios.get('https://api.discogs.com/database/search', {
-		  params: {
-			artist: req.query.artist,
-			release_title: req.query.release_title,
+
+		const params = {
 			key: process.env.CONSUMER_KEY,
 			secret: process.env.CONSUMER_SECRET,
-		  },
-		  headers: {
-			'User-Agent': 'soundstash/1.0',
-		  },
+		}
+		if(req.query.artist != '') {
+			params.artist = req.query.artist
+		}
+		if(req.query.release_title != '') {
+			params.release_title = req.query.release_title
+		}
+		if(req.query.genre != 'All genres') {
+			params.genre = req.query.genre
+		}
+		const discogsRes = await axios.get('https://api.discogs.com/database/search', {
+			params: params,
+			headers: {
+				'User-Agent': 'soundstash/1.0',
+			},
 		});
 	
 		res.json(discogsRes.data);

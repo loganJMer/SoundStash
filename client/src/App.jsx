@@ -1,12 +1,15 @@
 import { useState } from 'react'
 import './App.css'
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import Signin from './pages/Signin';
-import Signup from './pages/Signup';
-import Main from './pages/Main';
-import Header from './components/Header';
-import Footer from './components/Footer';
-import Search from './pages/Search';
+import Signin from './pages/signin';
+import Signup from './pages/signup';
+import Main from './pages/main';
+import Search from './pages/search';
+import Community from './pages/community';
+import Trades from './pages/trades';
+import Header from './components/header';
+import Footer from './components/footer';
+
 
 function App() {
   return (
@@ -25,6 +28,20 @@ function App() {
           <>
             <Header />
             <Search />
+            <Footer />
+          </>
+        } />
+        <Route path="/community" element={
+          <>
+            <Header />
+            <Community />
+            <Footer />
+          </>
+        } />
+        <Route path="/trades" element={
+          <>
+            <Header />
+            <Trades />
             <Footer />
           </>
         } />

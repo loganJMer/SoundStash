@@ -9,8 +9,9 @@ const Search = () => {
     
     const searchDiscogs = async () => {
         try {
+        
         const res = await axios.get(`/api/search`, {
-            params: { artist: searchTerm.artist, release_title: searchTerm.release_title },
+            params: { artist: searchTerm.artist, release_title: searchTerm.release_title, genre: searchTerm.genre },
         });
         console.log(res.data.results)
         setResults(res.data.results);
@@ -103,10 +104,44 @@ const Search = () => {
                         onChange={e => setSearchTerm(prev => ({ ...prev, release_title: e.target.value }))}
                         placeholder="Release Title"
                     />
+                    <select
+                        value={searchTerm.genre || ''}
+                        onChange={e => setSearchTerm(prev => ({ ...prev, genre: e.target.value }))}
+                        style={{
+                            marginRight: '0.5rem',
+                            width: '20%',
+                            minWidth: '100px',
+                            maxWidth: '200px',
+                            padding: '0.6rem 0.5rem',
+                            background: '#fff',
+                            color: '#000',
+                            border: '1px solid #d3d3d3',
+                            borderRadius: '10px',
+                            boxShadow: '0 2px 6px rgba(0,0,0,0.06)',
+                            outline: 'none'
+                        }}
+                    >
+                        <option value="All genres">All Genres</option>
+                        <option value="Rock">Rock</option>
+                        <option value="Pop">Pop</option>
+                        <option value="Electronic">Electronic</option>
+                        <option value="Hip Hop">Hip Hop</option>
+                        <option value="Jazz">Jazz</option>
+                        <option value="Classical">Classical</option>
+                        <option value="Folk">Folk</option>
+                        <option value="Reggae">Reggae</option>
+                        <option value="Blues">Blues</option>
+                        <option value="Funk / Soul">Funk / Soul</option>
+                        <option value="Country">Country</option>
+                        <option value="Latin">Latin</option>
+                        <option value="Stage & Screen">Stage & Screen</option>
+                        <option value="Children's">Children's</option>
+                    
+                    </select>
                     <button type="submit">Search</button>
                 </form>
             </div>
-            {/* Results will be rendered below here */}
+            
         </div>
     );
 };
