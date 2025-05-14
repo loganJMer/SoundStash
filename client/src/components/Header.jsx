@@ -41,7 +41,7 @@ const Header = () => {
         <ul>
           <li style={{ display: 'inline-block' }}>
             <a href="/" className="logo-link">
-              <img src="FullLogo.png" alt="Logo" style={{ height: '40px', verticalAlign: 'middle' }} />
+              <img src="/FullLogo.png" alt="Logo" style={{ height: '40px', verticalAlign: 'middle' }} />
             </a>
           </li>
           <li style={{ display: 'inline-block' }}>

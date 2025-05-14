@@ -5,6 +5,7 @@ import Signin from './pages/signin';
 import Signup from './pages/signup';
 import Main from './pages/main';
 import Search from './pages/search';
+import Album from './pages/album';
 import Community from './pages/community';
 import Trades from './pages/trades';
 import Header from './components/header';
@@ -28,6 +29,13 @@ function App() {
           <>
             <Header />
             <Search />
+            <Footer />
+          </>
+        } />
+        <Route path="/album/:id" element={
+          <>
+            <Header />
+            <Album />
             <Footer />
           </>
         } />

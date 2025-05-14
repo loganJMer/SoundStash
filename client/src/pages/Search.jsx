@@ -22,15 +22,15 @@ const Search = () => {
 
     return (
         <div style={{
-            background: '#fff',
+            background: 'rgb(243, 189, 127)',
             minHeight: '100vh',
             width: '100vw',
             padding: '2rem',
             boxSizing: 'border-box',
             margin: 0,
-            position: 'fixed',
+            position: 'absolute',
             top: 44,
-            left: 0
+            left: 0,
         }}>
             <style>
                 {`
@@ -63,18 +63,22 @@ const Search = () => {
                         transform: scale(1.1);
                         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
                     }
+                    a.result-link {
+                        text-decoration: none;
+                        color: inherit;
+                    }
                 `}
             </style>
+            <br></br>
             <div
                 style={{
-                    background: '#f6b648',
+                    background: '#f5b547',
                     borderRadius: '12px',
-                    boxShadow: '0 4px 16px rgba(0,0,0,0.10), 0 1.5px 4px rgba(0,0,0,0.08)',
+                    boxShadow: '0 8px 16px rgba(0,0,0,0.10), 0 4px 8px rgba(0,0,0,0.08)',
                     padding: '2rem',
                     width: '100%',
                     maxWidth: 'none',
                     margin: '0 auto 2rem auto',
-                    border: '1px solid #e0e0e0',
                     boxSizing: 'border-box'
                 }}
             >
@@ -141,7 +145,63 @@ const Search = () => {
                     <button type="submit">Search</button>
                 </form>
             </div>
-            
+            <div
+                style={{
+                    display: 'grid',
+                    gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
+                    gap: '1.5rem',
+                    width: '100%',
+                    marginTop: '2rem',
+                }}
+            >
+                {results && results.length > 0 ? (
+                    results.map((item, idx) => (
+                        <a
+                            href={`/album/${item.id || idx}`}
+                            className="result-link"
+                            key={item.id || idx}
+                            style={{ display: 'block' }}
+                        >
+                            <div
+                                style={{
+                                    background: '#fff',
+                                    borderRadius: '10px',
+                                    boxShadow: '0 2px 8px rgba(0,0,0,0.08)',
+                                    padding: '1rem',
+                                    display: 'flex',
+                                    flexDirection: 'column',
+                                    alignItems: 'center',
+                                    minHeight: '260px',
+                                }}
+                            >
+                                <img
+                                    src={item.cover_image || "logo.png"}
+                                    alt={item.title}
+                                    style={{
+                                        width: '100%',
+                                        maxWidth: '180px',
+                                        height: '180px',
+                                        objectFit: 'cover',
+                                        borderRadius: '8px',
+                                        marginBottom: '1rem',
+                                        background: '#f3f3f3'
+                                    }}
+                                />
+                                <div style={{ fontWeight: 600, marginBottom: '0.5rem', textAlign: 'center', color: '#000'}}>
+                                    {item.title}
+                                </div>
+                                <div style={{ color: '#888', fontSize: '0.9em', textAlign: 'center' }}>
+                                    {item.genre && Array.isArray(item.genre) ? item.genre.join(', ') : item.genre}
+                                </div>
+                            </div>
+                        </a>
+                    ))
+                ) : (
+                    <div style={{ gridColumn: '1/-1', textAlign: 'center', color: '#888', fontSize: '1.1em' }}>
+                        No results found. Try searching for something!
+                    </div>
+                )}
+            </div>
         </div>
     );
 };
