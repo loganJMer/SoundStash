@@ -21,19 +21,29 @@ const Search = () => {
     };
 
     return (
-        <div style={{
-            background: 'rgb(243, 189, 127)',
-            minHeight: '100vh',
-            width: '100vw',
-            padding: '2rem',
-            boxSizing: 'border-box',
-            margin: 0,
-            position: 'absolute',
-            top: 44,
-            left: 0,
-        }}>
+        <div
+            style={{
+                background: 'rgb(243, 189, 127)',
+                minHeight: '100vh',
+                width: '100vw',
+                padding: '2rem 0',
+                boxSizing: 'border-box',
+                margin: 0,
+                position: 'absolute',
+                top: 44,
+                left: 0,
+                right: 0,
+                overflowX: 'hidden',
+            }}
+        >
             <style>
                 {`
+                    html, body, #root {
+                        width: 100vw;
+                        overflow-x: hidden;
+                        margin: 0;
+                        padding: 0;
+                    }
                     input {
                         margin-right: 0.5rem;
                         width: 25%;
@@ -69,7 +79,7 @@ const Search = () => {
                     }
                 `}
             </style>
-            <br></br>
+            <br />
             <div
                 style={{
                     background: '#f5b547',
@@ -77,9 +87,9 @@ const Search = () => {
                     boxShadow: '0 8px 16px rgba(0,0,0,0.10), 0 4px 8px rgba(0,0,0,0.08)',
                     padding: '2rem',
                     width: '100%',
-                    maxWidth: 'none',
+                    maxWidth: '900px',
                     margin: '0 auto 2rem auto',
-                    boxSizing: 'border-box'
+                    boxSizing: 'border-box',
                 }}
             >
                 <form
@@ -93,7 +103,7 @@ const Search = () => {
                         gap: '0.5rem',
                         marginBottom: 0,
                         maxWidth: '100%',
-                        justifyContent: 'flex-start'
+                        justifyContent: 'flex-start',
                     }}
                 >
                     <input
@@ -101,7 +111,7 @@ const Search = () => {
                         value={searchTerm.artist || ''}
                         onChange={e => setSearchTerm(prev => ({ ...prev, artist: e.target.value }))}
                         placeholder="Artist"
-                    />  
+                    />
                     <input
                         type="text"
                         value={searchTerm.release_title || ''}
@@ -122,7 +132,7 @@ const Search = () => {
                             border: '1px solid #d3d3d3',
                             borderRadius: '10px',
                             boxShadow: '0 2px 6px rgba(0,0,0,0.06)',
-                            outline: 'none'
+                            outline: 'none',
                         }}
                     >
                         <option value="All genres">All Genres</option>
@@ -140,7 +150,6 @@ const Search = () => {
                         <option value="Latin">Latin</option>
                         <option value="Stage & Screen">Stage & Screen</option>
                         <option value="Children's">Children's</option>
-                    
                     </select>
                     <button type="submit">Search</button>
                 </form>
@@ -151,7 +160,11 @@ const Search = () => {
                     gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
                     gap: '1.5rem',
                     width: '100%',
-                    marginTop: '2rem',
+                    maxWidth: '1200px',
+                    margin: '2rem auto 0 auto',
+                    boxSizing: 'border-box',
+                    paddingLeft: 0,
+                    paddingRight: 0,
                 }}
             >
                 {results && results.length > 0 ? (
@@ -184,10 +197,10 @@ const Search = () => {
                                         objectFit: 'cover',
                                         borderRadius: '8px',
                                         marginBottom: '1rem',
-                                        background: '#f3f3f3'
+                                        background: '#f3f3f3',
                                     }}
                                 />
-                                <div style={{ fontWeight: 600, marginBottom: '0.5rem', textAlign: 'center', color: '#000'}}>
+                                <div style={{ fontWeight: 600, marginBottom: '0.5rem', textAlign: 'center', color: '#000' }}>
                                     {item.title}
                                 </div>
                                 <div style={{ color: '#888', fontSize: '0.9em', textAlign: 'center' }}>
