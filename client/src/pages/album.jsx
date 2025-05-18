@@ -1,5 +1,9 @@
 import React from 'react';
 
+
+
+
+
 const Album = () => {
     return (
         <div style={{
@@ -13,6 +17,11 @@ const Album = () => {
             top: 0,
             left: 0
         }}>
+
+
+
+
+
         </div>
     );
 };

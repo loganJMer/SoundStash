@@ -1,40 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext} from 'react';
+import { AuthContext } from '../context/authContext'; 
 import axios from 'axios';
 
+
 const Header = () => {
-  const [username, setUsername] = useState('');
-  const [loggedIn, setLoggedIn] = useState('');
-
-  useEffect(() => {
-    axios.get('/api/verifyToken', { withCredentials: true })
-        .then(res => {
-            console.log(res.data.valid)
-            if (res.data.valid) {
-                setLoggedIn(true);
-                setUsername(res.data.username);
-                console.log('Username:', res.data.username);
-            } else {
-                console.log('Invalid or expired token.');
-                
-            }
-        })
-        .catch(() => {
-            console.log('Invalid or expired token.');
-        });
-}, []);
-
-  const deleteLoginCookie = () => {
-    axios.post('/api/logout', { withCredentials: true })
-    .then(() => {
-        console.log('Logged out');
-        setUsername(null);
-        setLoggedIn(false);
-    })
-    .catch(err => {
-        console.error('Logout error:', err);
-    });
-  };
-
+  const { username, loggedIn, logout } = useContext(AuthContext);
+  
   return (
     <div style={{ width: '100vw', position: 'fixed', top: 0, left: 0, zIndex: 1000 }}>
       <nav style={{ width: '100%' }}>
@@ -80,7 +51,7 @@ const Header = () => {
                 </a>
                 <a
                   href="#"
-                  onClick={deleteLoginCookie}
+                  onClick={logout}
                   style={{
                     borderRadius: '0 0 4px 4px'
                   }}

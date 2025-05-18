@@ -1,33 +1,22 @@
 import axios from 'axios';
-import React, { useState, useEffect } from 'react';
-import Cookies from 'js-cookie';
+import React, { useState, useEffect, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { AuthContext } from '../context/authContext';
 
 const Signup = () => {
     const [username, setUsername] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
+    const { loggedIn } = useContext(AuthContext);
 
     const navigate = useNavigate();
 
     useEffect(() => {
-
-        axios.get('/api/verifyToken', { withCredentials: true })
-            .then(res => {
-                console.log(res.data.valid)
-                if (res.data.valid) {
-                    console.log('Username:', res.data.username);
-                    navigate('/');
-                } else {
-                    console.log('Invalid or expired token.');
-                    
-                }
-            })
-            .catch(() => {
-                console.log('Invalid or expired token.');
-            });
-    }, []);
+        if (loggedIn) {
+            navigate('/');
+        }
+    }, [loggedIn]);
 
     useEffect(() => {
             document.body.style.backgroundColor = '#e0753d';
