@@ -5,7 +5,7 @@ const Community = () => {
         <div style={{
             background: '#fff',
             minHeight: '100vh',
-            width: '100vw',
+            width: '100%',
             padding: '4rem',
             boxSizing: 'border-box',
             margin: 0,

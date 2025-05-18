@@ -25,7 +25,7 @@ const Search = () => {
             style={{
                 background: 'rgb(243, 189, 127)',
                 minHeight: '100vh',
-                width: '100vw',
+                width: '100%',
                 padding: '2rem 0',
                 boxSizing: 'border-box',
                 margin: 0,
@@ -39,7 +39,7 @@ const Search = () => {
             <style>
                 {`
                     html, body, #root {
-                        width: 100vw;
+                        width: 100%;
                         overflow-x: hidden;
                         margin: 0;
                         padding: 0;

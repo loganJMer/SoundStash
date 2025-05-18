@@ -7,7 +7,7 @@ const Header = () => {
   const { username, loggedIn, logout } = useContext(AuthContext);
   
   return (
-    <div style={{ width: '100vw', position: 'fixed', top: 0, left: 0, zIndex: 1000 }}>
+    <div style={{ width: '100%', position: 'fixed', top: 0, left: 0, zIndex: 1000 }}>
       <nav style={{ width: '100%' }}>
         <ul>
           <li style={{ display: 'inline-block' }}>
@@ -80,7 +80,7 @@ const Header = () => {
             background-color: #e0753d;
             display: flex;
             align-items: center;
-            width: 100vw;
+            width: 100%;
           }
 
           li {

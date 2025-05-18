@@ -39,12 +39,12 @@ const Album = () => {
         <div style={{
             background: '#fff',
             minHeight: '100vh',
-            width: '100vw',
+            width: '100%',
             padding: '2rem',
             boxSizing: 'border-box',
             margin: 0,
             position: 'absolute',
-            top: 44,
+            top: 50,
             left: 0
         }}>
         {albumData ? (
@@ -54,8 +54,8 @@ const Album = () => {
                     alt={"Album Cover Not Found"}
                     style={{
                         width: '100%',
-                        maxWidth: '180px',
-                        height: '180px',
+                        maxWidth: '300px',
+                        height: '300px',
                         objectFit: 'cover',
                         borderRadius: '8px',
                         marginBottom: '1rem',
