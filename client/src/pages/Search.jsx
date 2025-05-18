@@ -11,7 +11,7 @@ const Search = () => {
         try {
         
         const res = await axios.get(`/api/search`, {
-            params: { artist: searchTerm.artist, release_title: searchTerm.release_title, genre: searchTerm.genre },
+            params: {artist: searchTerm.artist, release_title: searchTerm.release_title, genre: searchTerm.genre },
         });
         console.log(res.data.results)
         setResults(res.data.results);
@@ -157,7 +157,7 @@ const Search = () => {
                 {results && results.length > 0 ? (
                     results.map((item, idx) => (
                         <a
-                            href={`/album/${item.id || idx}`}
+                            href={`/album/${item.master_id || idx}`}
                             className="result-link"
                             key={item.id || idx}
                             style={{ display: 'block' }}

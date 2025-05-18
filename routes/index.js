@@ -148,6 +148,7 @@ exports.search = async function(req, res) {
 		const params = {
 			key: process.env.CONSUMER_KEY,
 			secret: process.env.CONSUMER_SECRET,
+			format: 'Vinyl'
 		}
 		if(req.query.artist != '') {
 			params.artist = req.query.artist
@@ -161,6 +162,27 @@ exports.search = async function(req, res) {
 		const discogsRes = await axios.get('https://api.discogs.com/database/search', {
 			params: params,
 			headers: {
+				'User-Agent': 'soundstash/1.0',
+			},
+		});
+	
+		res.json(discogsRes.data);
+	  } catch (error) {
+		console.error('Discogs API error:', error.message);
+		res.status(500).json({ error: 'Discogs API error', details: error.message });
+	  }
+}
+
+exports.searchAlbum = async function(req, res) {
+	try {
+		const params = {
+			key: process.env.CONSUMER_KEY,
+			secret: process.env.CONSUMER_SECRET,
+		}
+		const discogsRes = await axios.get(`https://api.discogs.com/masters/${req.params.albumId}`, {
+			params: params,
+			headers: {
+				
 				'User-Agent': 'soundstash/1.0',
 			},
 		});

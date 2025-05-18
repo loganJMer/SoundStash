@@ -52,7 +52,8 @@ app.post('/api/addUser', routes.addUser);
 app.post('/api/signin', routes.signin);
 app.get('/api/verifyToken', routes.verifyToken); //verify token
 app.post('/api/logout', routes.logout); //logout user
-app.get('/api/search', routes.search); //search discogs
+app.get('/api/search', routes.search); //search discogs general
+app.get('/api/search/:albumId', routes.searchAlbum); //search discogs album
 
 //app.use(routes.authenticate); //authenticate user
 
