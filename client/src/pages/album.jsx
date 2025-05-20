@@ -54,6 +54,9 @@ const Album = () => {
         const fetchMasters = async () => {
             try {
                 const res = await axios.get(`/api/searchMasters/${id}`)
+                for (let i = 0; i < 15; i++) {
+                    res.data.versions.push({ id: `placeholder-${i}`, thumb: '/logo.png' });
+                }
                 setMasters(res.data.versions)
             } catch (error) {
                 console.error('Error fetching masters:', error)
@@ -72,7 +75,10 @@ const Album = () => {
                 setMaxMasters(count > 0 ? count : 1);
             }
         };
-        handleResize();
+        setTimeout(() => {
+            handleResize();
+        }, 1000);
+
         window.addEventListener('resize', handleResize);
         return () => window.removeEventListener('resize', handleResize);
     }, [masters.length]);
@@ -176,7 +182,8 @@ const Album = () => {
                 </a>
             )}
 
-            {masters.length > 0 ? (
+            {masters.length > 0 && albumData && albumData.artists && albumData.artists[0] && albumData.title ? (
+                <a href={`/search?artist=${encodeURIComponent(albumData.artists[0].name)}&release_title=${encodeURIComponent(albumData.title)}&type=releases`} style={{}}>
                 <div style={{ marginTop: '6rem', background: '#fff', padding: '1rem 1rem 0.01rem 1rem', borderRadius: '8px', boxShadow: '0 2px 6px rgba(0,0,0,0.1)', width: '100%', boxSizing: 'border-box' }}>
                     <div
                         ref={mastersRowRef}
@@ -213,12 +220,15 @@ const Album = () => {
                             </div>
                         ))}
                     </div>
-                    <h3 style={{color: "blue"}}>Click here to view masters for this album</h3>
+                    <h3 style={{color: "blue"}}>Click here to view individual releases of this album</h3>
                 </div>
+                </a>
             ) : (
                 <p>No masters found.</p>
             )}
+
         </div>
+        
     );
 }
 
