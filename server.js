@@ -54,10 +54,8 @@ app.get('/api/verifyToken', routes.verifyToken); //verify token
 app.post('/api/logout', routes.logout); //logout user
 app.get('/api/search', routes.search); //search discogs general
 app.get('/api/search/:albumId', routes.searchAlbum); //search discogs album
-
-//app.use(routes.authenticate); //authenticate user
-
-
+app.get('/api/searchMasters/:albumId', routes.searchMasters); //search album masters
+app.get('/api/searchArtist/:artistId', routes.searchArtist); //search albums by artist
 
 //start server
 app.listen(PORT, err => {

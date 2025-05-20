@@ -5,6 +5,7 @@ var url = require('url');
 const jwt = require('jsonwebtoken');
 const axios = require('axios');
 const { release } = require('os');
+const { format } = require('path');
 var sqlite3 = require('sqlite3').verbose(); //verbose provides more detailed stack trace
 var db = new sqlite3.Database('data/userdata');
 
@@ -159,6 +160,9 @@ exports.search = async function(req, res) {
 		if(req.query.genre != 'All genres') {
 			params.genre = req.query.genre
 		}
+		if(req.query.type != 'release') {
+			params.type = req.query.type
+		}
 		const discogsRes = await axios.get('https://api.discogs.com/database/search', {
 			params: params,
 			headers: {
@@ -182,12 +186,63 @@ exports.searchAlbum = async function(req, res) {
 		const discogsRes = await axios.get(`https://api.discogs.com/masters/${req.params.albumId}`, {
 			params: params,
 			headers: {
-				
 				'User-Agent': 'soundstash/1.0',
 			},
 		});
 	
 		res.json(discogsRes.data);
+	  } catch (error) {
+		console.error('Discogs API error:', error.message);
+		res.status(500).json({ error: 'Discogs API error', details: error.message });
+	  }
+}
+
+exports.searchMasters = async function(req, res) {
+	try {
+		const params = {
+			key: process.env.CONSUMER_KEY,
+			secret: process.env.CONSUMER_SECRET,
+			format: 'Vinyl',
+		}
+		const discogsRes = await axios.get(`https://api.discogs.com/masters/${req.params.albumId}/versions`, {
+			params: params,
+			headers: {
+				'User-Agent': 'soundstash/1.0',
+			},
+		});
+	
+		res.json(discogsRes.data);
+	  } catch (error) {
+		console.error('Discogs API error:', error.message);
+		res.status(500).json({ error: 'Discogs API error', details: error.message });
+	  }
+}
+
+exports.searchArtist = async function(req, res) {
+	try {
+		const params = {
+			key: process.env.CONSUMER_KEY,
+			secret: process.env.CONSUMER_SECRET,
+		}
+		const discogsRes = await axios.get(`https://api.discogs.com/artists/${req.params.artistId}/releases`, {
+			params: params,
+			headers: {
+				'User-Agent': 'soundstash/1.0',
+			},
+		});
+		const data = discogsRes.data.releases
+		let ids = []
+		let images = []
+		for (let i = 0; i < data.length; i++) {
+			if ((data[i].format && data[i].format.includes('Vinyl')) || (data[i].type && data[i].type == 'master')) {
+				if(ids.includes(data[i].id) == false){
+					ids.push(data[i].id)
+					images.push(data[i].thumb)
+					if(images.length >= 4) break;
+				}
+			}
+		}
+		res.json({images: images, ids: ids});
 	  } catch (error) {
 		console.error('Discogs API error:', error.message);
 		res.status(500).json({ error: 'Discogs API error', details: error.message });

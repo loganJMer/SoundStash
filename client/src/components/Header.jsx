@@ -1,6 +1,5 @@
-import React, { useState, useEffect, useContext} from 'react';
+import React, { useContext} from 'react';
 import { AuthContext } from '../context/authContext'; 
-import axios from 'axios';
 
 
 const Header = () => {
@@ -9,7 +8,7 @@ const Header = () => {
   return (
     <div style={{ width: '100%', position: 'fixed', top: 0, left: 0, zIndex: 1000 }}>
       <nav style={{ width: '100%' }}>
-        <ul>
+        <ul className="header_ul">
           <li style={{ display: 'inline-block' }}>
             <a href="/" className="logo-link">
               <img src="/FullLogo.png" alt="Logo" style={{ height: '40px', verticalAlign: 'middle' }} />
@@ -72,7 +71,7 @@ const Header = () => {
           body {
             margin: 0;
           }
-          ul {
+          .header_ul {
             list-style-type: none;
             margin: 0;
             padding: 0;

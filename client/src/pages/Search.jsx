@@ -6,12 +6,15 @@ import React, { useState, useEffect } from 'react';
 const Search = () => {
     const [searchTerm, setSearchTerm] = useState('');
     const [results, setResults] = useState([]);
-    
+    const [queriesRead, setQueriesRead] = useState(false);
+    const [autoSearchDone, setAutoSearchDone] = useState(false);
+
+
     const searchDiscogs = async () => {
         try {
         
         const res = await axios.get(`/api/search`, {
-            params: {artist: searchTerm.artist, release_title: searchTerm.release_title, genre: searchTerm.genre },
+            params: {artist: searchTerm.artist, release_title: searchTerm.release_title, genre: searchTerm.genre, type: searchTerm.type},
         });
         console.log(res.data.results)
         setResults(res.data.results);
@@ -19,6 +22,35 @@ const Search = () => {
         console.error('Error fetching from backend:', error);
         }
     };
+
+
+    useEffect(() => {
+        // Check for URL query parameters and update searchTerm if present
+        if(queriesRead) return
+        const params = new URLSearchParams(window.location.search);
+        const artist = params.get('artist') || '';
+        const release_title = params.get('release_title') || '';
+        const genre = params.get('genre') || '';
+        const type = params.get('type') || '';
+        if (artist || release_title || genre || type) {
+            setQueriesRead(true)
+            setSearchTerm(prev => ({
+                ...prev,
+                artist,
+                release_title,
+                genre,
+                type,
+            }));
+        }
+    }, [setSearchTerm, queriesRead]);
+
+
+    useEffect(() => {
+        if(queriesRead && !autoSearchDone) {
+            searchDiscogs();
+            setAutoSearchDone(true)
+        }
+    }, [queriesRead, autoSearchDone, searchDiscogs, setAutoSearchDone]);
 
     return (
         <div
@@ -150,6 +182,26 @@ const Search = () => {
                         <option value="Latin">Latin</option>
                         <option value="Stage & Screen">Stage & Screen</option>
                         <option value="Children's">Children's</option>
+                    </select>
+                    <select
+                        value={searchTerm.type || ''}
+                        onChange={e => setSearchTerm(prev => ({ ...prev, type: e.target.value }))}
+                        style={{
+                            marginRight: '0.5rem',
+                            width: '20%',
+                            minWidth: '100px',
+                            maxWidth: '200px',
+                            padding: '0.6rem 0.5rem',
+                            background: '#fff',
+                            color: '#000',
+                            border: '1px solid #d3d3d3',
+                            borderRadius: '10px',
+                            boxShadow: '0 2px 6px rgba(0,0,0,0.06)',
+                            outline: 'none',
+                        }}
+                    >
+                        <option value="release">Releases</option>
+                        <option value="master">Masters</option>
                     </select>
                     <button type="submit">Search</button>
                 </form>
