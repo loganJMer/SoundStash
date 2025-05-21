@@ -14,6 +14,7 @@ router.post('/logout', authController.logout); //logout user
 router.post('/addAlbum', userController.addAlbum); //add album to user collection
 router.get('/search', discogsController.search); //search discogs general
 router.get('/search/:albumId', discogsController.searchAlbum); //search discogs album
+router.get('/masterSearch/:albumId', discogsController.masterSearch); //search discogs album
 router.get('/searchVersions/:albumId', discogsController.searchVersions); //search album masters
 router.get('/searchArtist/:artistId', discogsController.searchArtist); //search albums by artist
 

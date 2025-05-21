@@ -43,12 +43,22 @@ exports.search = async function(req, res) {
 
 exports.searchAlbum = async function(req, res) {
 	try {
-		const data = await getDiscogsData(`https://api.discogs.com/masters/${req.params.albumId}`);
+		const data = await getDiscogsData(`https://api.discogs.com/releases/${req.params.albumId}`);
 		res.json(data);
 	  } catch (error) {
 		console.error('Discogs API error:', error.message);
 		res.status(500).json({ error: 'Discogs API error', details: error.message });
 	  }
+}
+
+exports.masterSearch = async function(req, res) {
+    try {
+        const data = await getDiscogsData(`https://api.discogs.com/masters/${req.params.albumId}`);
+        res.json(data);
+      } catch (error) {
+        console.error('Discogs API error:', error.message);
+        res.status(500).json({ error: 'Discogs API error', details: error.message });
+      }
 }
 
 exports.searchVersions = async function(req, res) {

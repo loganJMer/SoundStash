@@ -16,7 +16,6 @@ const Search = () => {
         const res = await axios.get(`/api/search`, {
             params: {artist: searchTerm.artist, release_title: searchTerm.release_title, genre: searchTerm.genre, type: searchTerm.type},
         });
-        console.log(res.data.results)
         setResults(res.data.results);
         } catch (error) {
         console.error('Error fetching from backend:', error);
@@ -222,7 +221,7 @@ const Search = () => {
                 {results && results.length > 0 ? (
                     results.map((item, idx) => (
                         <a
-                            href={`/album/${item.master_id || idx}`}
+                            href={`/album/${item.id || idx}?master=${item.type === 'master'}`}
                             className="result-link"
                             key={item.id || idx}
                             style={{ display: 'block' }}

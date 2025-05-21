@@ -5,6 +5,7 @@ import { useParams } from 'react-router-dom';
 const Album = () => {
 
     const { id } = useParams()
+    const [isMaster, setIsMaster] = useState(false)
     const [albumData, setAlbumData] = useState(null)
     const [artistOtherAlbums, setArtistOtherAlbums] = useState([])
     const [masters, setMasters] = useState([])
@@ -17,7 +18,15 @@ const Album = () => {
         if (!id) return
         const fetchAlbum = async () => {
             try {
-                const res = await axios.get(`/api/search/${id}`)
+                const params = new URLSearchParams(window.location.search);
+                const isMaster = params.get('master') === 'true';
+                let res;
+                if(isMaster) {
+                    setIsMaster(true)
+                    res = await axios.get(`/api/masterSearch/${id}`)
+                } else{
+                    res = await axios.get(`/api/search/${id}`)
+                }
                 setAlbumData(res.data)
 
                 const images = res.data.images || []
@@ -50,10 +59,15 @@ const Album = () => {
 
     //gets some versions of album to display
     useEffect(() => {
-        if(!id) return
-        const fetchMasters = async () => {
+        if(!albumData) return
+        const fetchVersions = async () => {
             try {
-                const res = await axios.get(`/api/searchVersions/${id}`)
+                if (isMaster) {
+                    var masterId = id
+                } else{
+                    var masterId = albumData.master_id
+                }
+                const res = await axios.get(`/api/searchVersions/${masterId}`)
                 for (let i = 0; i < 15; i++) {
                     res.data.versions.push({ id: `placeholder-${i}`, thumb: '/logo.png' });
                 }
@@ -62,8 +76,8 @@ const Album = () => {
                 console.error('Error fetching versions:', error)
             }
         };
-        fetchMasters()
-    }, [id]);
+        fetchVersions()
+    }, [albumData, isMaster, id]);
 
     // Calculate how many masters fit in one row
     useEffect(() => {
@@ -98,22 +112,42 @@ const Album = () => {
         }}>
             {albumData ? (
                 <div style={{ marginTop: '4rem', display: 'flex', alignItems: 'flex-start', background: '#fff', padding: '2rem', borderRadius: '8px', boxShadow: '0 2px 6px rgba(0,0,0,0.1)', maxWidth: '800px', color: '#000', width: '100%', maxHeight: '400px' }}>
-                    <img
-                        src={primaryImage}
-                        alt={"Album Cover Not Found"}
-                        style={{
-                            width: '100%',
-                            maxWidth: '300px',
-                            height: '300px',
-                            objectFit: 'cover',
-                            borderRadius: '8px',
-                            marginBottom: '1rem',
-                            background: '#f3f3f3',
-                            boxShadow: '0 8px 24px rgba(0,0,0,0.18), 0 1.5px 4px rgba(0,0,0,0.12)',
-                            transform: 'translateY(-6px) scale(1.03)',
-                            transition: 'box-shadow 0.2s, transform 0.2s'
-                        }}
-                    />
+                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                        <img
+                            src={primaryImage}
+                            alt={"Album Cover Not Found"}
+                            style={{
+                                width: '100%',
+                                maxWidth: '300px',
+                                height: '300px',
+                                objectFit: 'cover',
+                                borderRadius: '8px',
+                                marginBottom: '1rem',
+                                background: '#f3f3f3',
+                                boxShadow: '0 8px 24px rgba(0,0,0,0.18), 0 1.5px 4px rgba(0,0,0,0.12)',
+                                transform: 'translateY(-6px) scale(1.03)',
+                                transition: 'box-shadow 0.2s, transform 0.2s'
+                            }}
+                        />
+                        {!isMaster && albumData && albumData.master_id ? (
+                            <a href={`/album/${albumData.master_id}?master=true`} style={{ textDecoration: 'none' }}>
+                                <button style={{
+                                    marginTop: '0.5rem',
+                                    background: '#1976d2',
+                                    color: '#fff',
+                                    border: 'none',
+                                    borderRadius: '4px',
+                                    padding: '0.5rem 1rem',
+                                    fontSize: '1rem',
+                                    cursor: 'pointer',
+                                    boxShadow: '0 2px 6px rgba(0,0,0,0.08)',
+                                    transition: 'background 0.2s'
+                                }}>
+                                    View Master Release
+                                </button>
+                            </a>
+                        ) : null}
+                    </div>
                     <div style={{
                         display: 'inline-block',
                         verticalAlign: 'top',
@@ -228,7 +262,6 @@ const Album = () => {
             )}
 
         </div>
-        
     );
 }
 
