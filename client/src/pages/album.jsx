@@ -48,18 +48,18 @@ const Album = () => {
     }, [albumData])
 
 
-    //gets some masters of album to display
+    //gets some versions of album to display
     useEffect(() => {
         if(!id) return
         const fetchMasters = async () => {
             try {
-                const res = await axios.get(`/api/searchMasters/${id}`)
+                const res = await axios.get(`/api/searchVersions/${id}`)
                 for (let i = 0; i < 15; i++) {
                     res.data.versions.push({ id: `placeholder-${i}`, thumb: '/logo.png' });
                 }
                 setMasters(res.data.versions)
             } catch (error) {
-                console.error('Error fetching masters:', error)
+                console.error('Error fetching versions:', error)
             }
         };
         fetchMasters()
