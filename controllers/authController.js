@@ -1,17 +1,6 @@
 const db = require('../database');
 const jwt = require('jsonwebtoken');
 
-
-function verifyAuthToken(req) {
-	const token = req.cookies && req.cookies.auth_token;
-	if (!token) return null;
-	try {
-		return jwt.verify(token, process.env.JWT_SECRET);
-	} catch (err) {
-		return null;
-	}
-}
-
 exports.checkUserExists = function (req, res){
 
 	const username = req.body.username
@@ -104,11 +93,11 @@ exports.signin = function (req, res) {
 }
 
 exports.verifyToken = function (req, res) {
-	const decoded = verifyAuthToken(req);
-	if (!decoded) {
+	const username = req.user.username;
+	if(username == null){
 		return res.json({ valid: false });
 	}
-	res.json({ valid: true, username: decoded.username });
+	res.json({ valid: true, username: username });
 }
 
 exports.logout = function (req, res) {
