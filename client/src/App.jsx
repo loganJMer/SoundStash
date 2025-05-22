@@ -1,6 +1,6 @@
 import './App.css'
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import { Signin, Signup, Main, Search, Album, Community, Trades } from './pages';
+import { Signin, Signup, Main, Search, Album, Community, Trades, Profile } from './pages';
 import { Header, Footer } from './components';
 import { AuthProvider } from './context/authContext';
 
@@ -43,6 +43,13 @@ function App() {
             <>
               <Header />
               <Trades />
+              <Footer />
+            </>
+          } />
+          <Route path="/profile" element={
+            <>
+              <Header />
+              <Profile />
               <Footer />
             </>
           } />

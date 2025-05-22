@@ -58,13 +58,17 @@ exports.removeAlbum = function(req, res) {
         }
         res.json({ success: true });
     });
-
 }
 
 exports.checkAlbumInCollection = function(req, res) {
-    const albumId = req.body.albumId;
+    const albumId = req.query.albumId;
     const collection = req.collection;
     // Check if the album is already in the collection
     const albumInCollection = collection.some(album => album.id === albumId);
     res.json({ albumInCollection: albumInCollection });
+}
+
+exports.getCollection = function(req, res) {
+    const collection = req.collection;
+    res.json({ collection: collection });
 }

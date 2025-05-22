@@ -3,8 +3,8 @@ const jwt = require('jsonwebtoken');
 
 exports.checkUserExists = function (req, res){
 
-	const username = req.body.username
-	const email = req.body.email
+	const username = req.query.username
+	const email = req.query.email
 	//check database users table for user
 	db.get("SELECT 1 FROM users WHERE username = ? LIMIT 1", [username], function (err, row) {
         if (row) {

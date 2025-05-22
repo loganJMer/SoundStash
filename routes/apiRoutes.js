@@ -16,9 +16,10 @@ router.get('/verifyToken', requireAuth, authController.verifyToken); //verify to
 router.post('/logout', authController.logout); //logout user
 
 //user routes
-router.post('/addAlbum', requireAuth, getCollection, userController.addAlbum); //add album to user collection
-router.post('/removeAlbum', requireAuth, getCollection, userController.removeAlbum); //remove album from user collection
-router.post('/checkAlbumInCollection', requireAuth, getCollection, userController.checkAlbumInCollection); //add album to user collection
+router.patch('/addAlbum', requireAuth, getCollection, userController.addAlbum); //add album to user collection
+router.patch('/removeAlbum', requireAuth, getCollection, userController.removeAlbum); //remove album from user collection
+router.get('/checkAlbumInCollection', requireAuth, getCollection, userController.checkAlbumInCollection); //add album to user collection
+router.get('/getCollection', requireAuth, getCollection, userController.getCollection); //get user collection
 
 //discogs search routes
 router.get('/search', discogsController.search); //search discogs general

@@ -43,9 +43,11 @@ const Signup = () => {
         }
         console.log("Formatting valid. Checking if user already exists")
 	
-        const res = await axios.post('/api/checkUserExists', {
+        const res = await axios.get('/api/checkUserExists', {
+            params: {
             username: username,
             email: email,
+            },
         });
         let conflict = res.data.conflict
         if(conflict === "username"){

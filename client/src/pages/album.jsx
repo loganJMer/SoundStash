@@ -16,7 +16,7 @@ const Album = () => {
 
     const addToCollection = async () => {
         try {
-            const res = await axios.post('/api/addAlbum', {
+            const res = await axios.patch('/api/addAlbum', {
                 albumData: albumData,
                 primaryImage: primaryImage,
                 master: isMaster, 
@@ -36,7 +36,7 @@ const Album = () => {
 
     const removeFromCollection = async () => {
         try {
-            const res = await axios.post('/api/removeAlbum', {
+            const res = await axios.patch('/api/removeAlbum', {
                 albumId: albumData.id,
             })
             if (res.data.success) {
@@ -46,6 +46,9 @@ const Album = () => {
             }
         } catch (error) {
             console.error('Error removing album from collection:', error)
+            if(error.response.data.error === 'Unauthorized'){
+                window.location.href = '/signin';
+            }
         }
     }
 
@@ -86,8 +89,8 @@ const Album = () => {
         console.log(albumData)
         const checkAlbumInCollection = async () => {
             try {
-                const res = await axios.post('/api/checkAlbumInCollection', {
-                    albumId: albumData.id
+                const res = await axios.get('/api/checkAlbumInCollection', {
+                    params: { albumId: albumData.id }
                 })
                 if (res.data.albumInCollection) {
                     setInCollection(true)
