@@ -30,8 +30,8 @@ exports.search = async function(req, res) {
             format: 'Vinyl',
             artist: req.query.artist || '',
             release_title: req.query.release_title || '',
+			year: req.query.year || '',
             genre: req.query.genre !== 'All genres' ? req.query.genre : undefined,
-            type: req.query.type !== 'release' ? req.query.type : undefined,
         };
 		const data = await getDiscogsData('https://api.discogs.com/database/search', params);
 		res.json(data);

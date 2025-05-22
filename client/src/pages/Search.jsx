@@ -14,7 +14,7 @@ const Search = () => {
         try {
         
         const res = await axios.get(`/api/search`, {
-            params: {artist: searchTerm.artist, release_title: searchTerm.release_title, genre: searchTerm.genre, type: searchTerm.type},
+            params: {artist: searchTerm.artist, release_title: searchTerm.release_title, genre: searchTerm.genre, year: searchTerm.year},
         });
         setResults(res.data.results);
         } catch (error) {
@@ -30,15 +30,15 @@ const Search = () => {
         const artist = params.get('artist') || '';
         const release_title = params.get('release_title') || '';
         const genre = params.get('genre') || '';
-        const type = params.get('type') || '';
-        if (artist || release_title || genre || type) {
+        const year = params.get('year') || '';
+        if (artist || release_title || genre || year) {
             setQueriesRead(true)
             setSearchTerm(prev => ({
                 ...prev,
                 artist,
                 release_title,
                 genre,
-                type,
+                year,
             }));
         }
     }, [setSearchTerm, queriesRead]);
@@ -149,6 +149,12 @@ const Search = () => {
                         onChange={e => setSearchTerm(prev => ({ ...prev, release_title: e.target.value }))}
                         placeholder="Release Title"
                     />
+                    <input
+                        type="text"
+                        value={searchTerm.year || ''}
+                        onChange={e => setSearchTerm(prev => ({ ...prev, year: e.target.value }))}
+                        placeholder="Year"
+                    />
                     <select
                         value={searchTerm.genre || ''}
                         onChange={e => setSearchTerm(prev => ({ ...prev, genre: e.target.value }))}
@@ -181,26 +187,6 @@ const Search = () => {
                         <option value="Latin">Latin</option>
                         <option value="Stage & Screen">Stage & Screen</option>
                         <option value="Children's">Children's</option>
-                    </select>
-                    <select
-                        value={searchTerm.type || ''}
-                        onChange={e => setSearchTerm(prev => ({ ...prev, type: e.target.value }))}
-                        style={{
-                            marginRight: '0.5rem',
-                            width: '20%',
-                            minWidth: '100px',
-                            maxWidth: '200px',
-                            padding: '0.6rem 0.5rem',
-                            background: '#fff',
-                            color: '#000',
-                            border: '1px solid #d3d3d3',
-                            borderRadius: '10px',
-                            boxShadow: '0 2px 6px rgba(0,0,0,0.06)',
-                            outline: 'none',
-                        }}
-                    >
-                        <option value="release">Releases</option>
-                        <option value="master">Masters</option>
                     </select>
                     <button type="submit">Search</button>
                 </form>
