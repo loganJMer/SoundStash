@@ -64,7 +64,7 @@ exports.checkAlbumInCollection = function(req, res) {
     const albumId = req.query.albumId;
     const collection = req.collection;
     // Check if the album is already in the collection
-    const albumInCollection = collection.some(album => album.id === albumId);
+    const albumInCollection = collection.some(album => album.id === parseInt(albumId));
     res.json({ albumInCollection: albumInCollection });
 }
 

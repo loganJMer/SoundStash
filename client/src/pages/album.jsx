@@ -86,9 +86,9 @@ const Album = () => {
     //check if album is in collection
     useEffect(() => {
         if (!albumData) return
-        console.log(albumData)
         const checkAlbumInCollection = async () => {
             try {
+                console.log(albumData.id)
                 const res = await axios.get('/api/checkAlbumInCollection', {
                     params: { albumId: albumData.id }
                 })
