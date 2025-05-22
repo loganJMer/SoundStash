@@ -7,11 +7,49 @@ const Album = () => {
     const { id } = useParams()
     const [isMaster, setIsMaster] = useState(false)
     const [albumData, setAlbumData] = useState(null)
+    const [inCollection, setInCollection] = useState(false)
     const [artistOtherAlbums, setArtistOtherAlbums] = useState([])
     const [masters, setMasters] = useState([])
     const [primaryImage, setPrimaryImage] = useState('/logo.png')
     const [maxMasters, setMaxMasters] = useState(0)
     const mastersRowRef = React.useRef(null)
+
+    const addToCollection = async () => {
+        try {
+            const res = await axios.post('/api/addAlbum', {
+                albumData: albumData,
+                primaryImage: primaryImage,
+                master: isMaster, 
+            })
+            if (res.data.success) {
+                setInCollection(true)
+            } else {
+                console.error('Error adding album to collection:', res.data.message)
+            }
+        } catch (error) {
+            console.error('Error adding album to collection:', error)
+            if(error.response.data.error === 'Unauthorized'){
+                window.location.href = '/signin';
+            }
+        }
+    }
+
+    const removeFromCollection = async () => {
+        try {
+            const res = await axios.post('/api/removeAlbum', {
+                albumId: albumData.id,
+            })
+            if (res.data.success) {
+                setInCollection(false)
+            } else {
+                console.error('Error removing album from collection:', res.data.message)
+            }
+        } catch (error) {
+            console.error('Error removing album from collection:', error)
+        }
+    }
+
+
 
     //gets album info and primary image
     useEffect(() => {
@@ -42,9 +80,34 @@ const Album = () => {
         fetchAlbum()
     }, [id])
 
+    //check if album is in collection
+    useEffect(() => {
+        if (!albumData) return
+        console.log(albumData)
+        const checkAlbumInCollection = async () => {
+            try {
+                const res = await axios.post('/api/checkAlbumInCollection', {
+                    albumId: albumData.id
+                })
+                if (res.data.albumInCollection) {
+                    setInCollection(true)
+                } else {
+                    setInCollection(false)
+                }
+            } catch (error) {
+                console.error('Error checking album in collection:', error)
+            }
+        }
+        checkAlbumInCollection()
+    }, [albumData])
+
+
+    //get other albums from artist
+    //if artist is Various, do not fetch other albums
     useEffect(() => {
     
         if (!albumData) return
+        if(albumData.artists[0].name === 'Various') return
         const fetchArtistOtherAlbums = async () => {
             try {
                 const res = await axios.get(`/api/searchArtist/${albumData.artists[0].id}`)
@@ -111,7 +174,7 @@ const Album = () => {
             color: '#000'
         }}>
             {albumData ? (
-                <div style={{ marginTop: '4rem', display: 'flex', alignItems: 'flex-start', background: '#fff', padding: '2rem', borderRadius: '8px', boxShadow: '0 2px 6px rgba(0,0,0,0.1)', maxWidth: '800px', color: '#000', width: '100%', maxHeight: '400px' }}>
+                <div style={{ marginTop: '4rem', display: 'flex', alignItems: 'flex-start', background: '#fff', padding: '2rem', borderRadius: '16px', boxShadow: '0 2px 6px rgba(0,0,0,0.1)', maxWidth: '800px', color: '#000', width: '100%', maxHeight: '400px' }}>
                     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
                         <img
                             src={primaryImage}
@@ -148,17 +211,57 @@ const Album = () => {
                             </a>
                         ) : null}
                     </div>
-                    <div style={{
-                        display: 'inline-block',
-                        verticalAlign: 'top',
-                        marginLeft: '2rem',
-                        maxWidth: '500px',
-                        color: '#000'
-                    }}>
-                        <h2>{albumData.title || 'Unknown Title'}</h2>
-                        <p><strong>Artist:</strong> {albumData.artists[0].name || 'Unknown Artist'}</p>
-                        <p><strong>Year:</strong> {albumData.year || 'Unknown Year'}</p>
-                        {/* add more info later */}
+                    <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center', marginLeft: '10rem'}}>
+                        <div style={{
+                            display: 'inline-block',
+                            verticalAlign: 'top',
+                            marginLeft: '2rem',
+                            color: '#000'
+                        }}>
+                            <h2>{albumData.title || 'Unknown Title'}</h2>
+                            <p><strong>Artist:</strong> {albumData.artists[0].name || 'Unknown Artist'}</p>
+                            <p><strong>Year:</strong> {albumData.year || 'Unknown Year'}</p>
+                            {/* add more info later */}
+                            <div style={{ marginTop: '1.5rem' }}>
+                                {inCollection ? (
+                                    <button
+                                        onClick={removeFromCollection}
+                                        style={{
+                                            background: '#d32f2f',
+                                            color: '#fff',
+                                            border: 'none',
+                                            borderRadius: '4px',
+                                            padding: '0.5rem 1rem',
+                                            fontSize: '1rem',
+                                            cursor: 'pointer',
+                                            marginBottom: '0.5rem',
+                                            boxShadow: '0 2px 6px rgba(0,0,0,0.08)',
+                                            transition: 'background 0.2s'
+                                        }}
+                                    >
+                                        Remove from Collection
+                                    </button>
+                                ) : (
+                                    <button
+                                        onClick={addToCollection}
+                                        style={{
+                                            background: '#388e3c',
+                                            color: '#fff',
+                                            border: 'none',
+                                            borderRadius: '4px',
+                                            padding: '0.5rem 1rem',
+                                            fontSize: '1rem',
+                                            cursor: 'pointer',
+                                            marginBottom: '0.5rem',
+                                            boxShadow: '0 2px 6px rgba(0,0,0,0.08)',
+                                            transition: 'background 0.2s'
+                                        }}
+                                    >
+                                        Add to Collection
+                                    </button>
+                                )}
+                            </div>
+                        </div>
                     </div>
                 </div>
             ) : (

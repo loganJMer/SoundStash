@@ -17,6 +17,7 @@ router.post('/logout', authController.logout); //logout user
 
 //user routes
 router.post('/addAlbum', requireAuth, getCollection, userController.addAlbum); //add album to user collection
+router.post('/removeAlbum', requireAuth, getCollection, userController.removeAlbum); //remove album from user collection
 router.post('/checkAlbumInCollection', requireAuth, getCollection, userController.checkAlbumInCollection); //add album to user collection
 
 //discogs search routes
