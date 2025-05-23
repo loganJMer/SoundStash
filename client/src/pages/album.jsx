@@ -207,7 +207,7 @@ const Album = () => {
         const handleResize = () => {
             if (mastersRowRef.current) {
                 const containerWidth = mastersRowRef.current.offsetWidth;
-                const itemWidth = 6.25 + 1; // 6.25rem image + 1rem gap
+                const itemWidth = 100 + 16; // 100px image + 16px gap
                 const count = Math.floor(containerWidth / itemWidth);
                 setMaxMasters(count > 0 ? count : 1);
             }
@@ -218,7 +218,7 @@ const Album = () => {
 
         window.addEventListener('resize', handleResize);
         return () => window.removeEventListener('resize', handleResize);
-    }, [mastersRowRef]);
+    }, [masters.length]);
 
     return (
         <div style={{

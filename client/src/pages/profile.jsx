@@ -49,7 +49,7 @@ const Profile = () => {
         const handleResize = () => {
             if (albumsRowRef.current) {
                 const containerWidth = albumsRowRef.current.offsetWidth;
-                const itemWidth = 6.25 + 1; // 6.25rem image + 1rem gap
+                const itemWidth = 100 + 16; // 100px image + 16px gap
                 const count = Math.floor(containerWidth / itemWidth);
                 setMaxAlbums(count > 0 ? count : 1);
             }

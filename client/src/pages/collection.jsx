@@ -10,13 +10,20 @@ const Collection = () => {
 
     useEffect(() => {
         const fetchCollection = async () => {
+            console.log(collectionType);
             try {
                 if(collectionType !== 'Collection' && collectionType !== 'Wishlist') {
                     console.error('Invalid collection type:', collectionType);
                 }
-                const response = await axios.get(`/api/get${collectionType}Public/${encodeURIComponent(username)}`);
-                console.log('Collection:', response.data.collection);
-                setCollection(response.data.collection);
+                
+                if (collectionType === 'Collection') {
+                    const response = await axios.get(`/api/getCollectionPublic/${encodeURIComponent(username)}`);
+                    setCollection(response.data.collection);
+                } else if (collectionType === 'Wishlist') {
+                    const response = await axios.get(`/api/getWishlistPublic/${encodeURIComponent(username)}`);
+                    setCollection(response.data.wishlist);
+                }
+                
             } catch (error) {
                 console.error('Error fetching collection:', error);
             }
@@ -120,4 +127,4 @@ const Collection = () => {
     );
 };
 
-export default Profile;
+export default Collection;
