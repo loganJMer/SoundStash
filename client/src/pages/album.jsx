@@ -218,7 +218,7 @@ const Album = () => {
 
         window.addEventListener('resize', handleResize);
         return () => window.removeEventListener('resize', handleResize);
-    }, [masters.length]);
+    }, [mastersRowRef]);
 
     return (
         <div style={{

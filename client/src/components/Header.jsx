@@ -6,12 +6,12 @@ const Header = () => {
   const { username, loggedIn, logout } = useContext(AuthContext);
   
   return (
-    <div style={{ width: '100%', position: 'fixed', top: 0, left: 0, zIndex: 1000 }}>
+    <div style={{ width: '100%', position: 'fixed', top: 0, left: 0, zIndex: 1000, height: '2.5rem' }}>
       <nav style={{ width: '100%' }}>
         <ul className="header_ul">
           <li style={{ display: 'inline-block' }}>
             <a href="/" className="logo-link">
-              <img src="/FullLogo.png" alt="Logo" style={{ height: '40px', verticalAlign: 'middle' }} />
+              <img src="/FullLogo.png" alt="Logo" style={{ height: '2.5rem', verticalAlign: 'middle' }} />
             </a>
           </li>
           <li style={{ display: 'inline-block' }}>
@@ -28,7 +28,7 @@ const Header = () => {
               <a
                 href="#"
                 style={{
-                  minWidth: '120px',
+                  minWidth: '7.5rem',
                   boxSizing: 'border-box',
                   border: 'none',
                   borderRadius: '0',
@@ -40,10 +40,10 @@ const Header = () => {
               <div
                 className="dropdown-content">
                 <a
-                  href="/profile"
+                  href={`/profile/${encodeURIComponent(username)}`}
                   style={{
-                    borderBottom: '1px solid white',
-                    borderRadius: '4px 4px 0 0'
+                    borderBottom: '0.0625rem solid white',
+                    borderRadius: '0.25rem 0.25rem 0 0'
                   }}
                 >
                   Profile
@@ -52,7 +52,7 @@ const Header = () => {
                   href="#"
                   onClick={logout}
                   style={{
-                    borderRadius: '0 0 4px 4px'
+                    borderRadius: '0 0 0.25rem 0.25rem'
                   }}
                 >
                   Logout
@@ -83,7 +83,7 @@ const Header = () => {
           }
 
           li {
-            margin: 0 10px;
+            margin: 0 0.625rem;
           }
 
           .right {
@@ -95,9 +95,9 @@ const Header = () => {
             display: inline-block;
             color: white;
             text-align: center;
-            padding: 14px 16px;
+            padding: 0.875rem 1rem;
             text-decoration: none;
-            min-width: 120px;
+            min-width: 7.5rem;
             box-sizing: border-box;
           }
 
@@ -117,26 +117,26 @@ const Header = () => {
             display: none;
             position: absolute;
             background-color: #e0753d;
-            min-width: 120px;
-            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            min-width: 7.5rem;
+            box-shadow: 0rem 0.5rem 1rem 0rem rgba(0,0,0,0.2);
             z-index: 9999;
-            border: 1px solid white;
-            border-radius: 4px;
+            border: 0.0625rem solid white;
+            border-radius: 0.25rem;
             box-sizing: border-box;
             top: 100%;
             left: 0;
-            margin-top: 0px;
+            margin-top: 0rem;
           }
 
           .dropdown-content a {
             color: white;
-            padding: 12px 16px;
+            padding: 0.75rem 1rem;
             text-decoration: none;
             display: block;
             text-align: left;
             background: #e0753d;
-            border-bottom: 1px solid white;
-            min-width: 120px;
+            border-bottom: 0.0625rem solid white;
+            min-width: 7.5rem;
             box-sizing: border-box;
           }
 
@@ -156,7 +156,7 @@ const Header = () => {
           .dropdown > a {
             border: none;
             border-radius: 0;
-            min-width: 120px;
+            min-width: 7.5rem;
             box-sizing: border-box;
             background: none;
           }

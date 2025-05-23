@@ -27,9 +27,9 @@ const Search = () => {
         // Check for URL query parameters and update searchTerm if present
         if(queriesRead) return
         const params = new URLSearchParams(window.location.search);
-        const artist = params.get('artist') || '';
-        const release_title = params.get('release_title') || '';
-        const genre = params.get('genre') || '';
+        const artist = params.get('artist') ? decodeURIComponent(params.get('artist'))  : '';
+        const release_title = params.get('release_title') ? decodeURIComponent(params.get('release_title')) : '';
+        const genre = params.get('genre') ? decodeURIComponent(params.get('genre')) : 'All genres';
         const year = params.get('year') || '';
         if (artist || release_title || genre || year) {
             setQueriesRead(true)
@@ -61,7 +61,7 @@ const Search = () => {
                 boxSizing: 'border-box',
                 margin: 0,
                 position: 'absolute',
-                top: 44,
+                top: '2.5rem',
                 left: 0,
                 right: 0,
                 overflowX: 'hidden',

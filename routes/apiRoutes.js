@@ -21,10 +21,12 @@ router.patch('/addAlbumCollection', requireAuth, getCollection, userController.a
 router.patch('/removeAlbumCollection', requireAuth, getCollection, userController.removeAlbumCollection); //remove album from user collection
 router.get('/checkAlbumInCollection', requireAuth, getCollection, userController.checkAlbumInCollection); //add album to user collection
 router.get('/getCollection', requireAuth, getCollection, userController.getCollection); //get user collection
+router.get('/getCollectionPublic/:username', userController.getCollectionPublic); //get user collection public
 router.patch('/addAlbumWishlist', requireAuth, getWishlist, userController.addAlbumWishlist); //add album to user Wishlist
 router.patch('/removeAlbumWishlist', requireAuth, getWishlist, userController.removeAlbumWishlist); //remove album from user Wishlist
 router.get('/checkAlbumInWishlist', requireAuth, getWishlist, userController.checkAlbumInWishlist); //add album to user Wishlist
 router.get('/getWishlist', requireAuth, getWishlist, userController.getWishlist); //get user Wishlist
+router.get('/getWishlistPublic/:username', userController.getWishlistPublic); //get user collection public
 
 //discogs search routes
 router.get('/search', discogsController.search); //search discogs general

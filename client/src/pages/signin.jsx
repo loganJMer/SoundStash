@@ -39,12 +39,12 @@ const Signin = () => {
     };
 
     return (
-        <div style={{maxWidth: '450px'}}>   
+        <div style={{maxWidth: '28.125rem'}}>   
             <style>
                 {`
                     input {
                         width: 100%;
-                        padding: 8px;
+                        padding: 0.5rem;
                         box-sizing: border-box;
                         background-color: #fff;
                         color: #000;
@@ -56,12 +56,12 @@ const Signin = () => {
                         margin: 0 auto;
                     }
                     button {
-                        padding: 10px 15px;
+                        padding: 0.625rem 0.9375rem;
                         background-color: #e37609;
                         color: #fff;
-                        border-width: 1px;
+                        border-width: 0.0625rem;
                         border-color: white;
-                        border-radius: 10px;
+                        border-radius: 0.625rem;
                         cursor: pointer;
                         transition: background-color 0.3s ease, transform 0.2s ease;
                     }
@@ -69,7 +69,7 @@ const Signin = () => {
                         background-color: #c65d07;
                         border-color: white;
                         transform: scale(1.1);
-                        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+                        box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.3);
                     }
                     a:hover {
                         text-decoration: underline;
@@ -77,14 +77,14 @@ const Signin = () => {
             `}
             </style>
             <img src="FullLogo.png" alt="Logo" /><br></br>
-            <div style={{ maxWidth: '300px', margin: '0 auto', padding: '20px', backgroundColor: '#e68230', borderWidth: "4px", borderColor: "#FFF", borderStyle: "double", borderRadius: "40px", boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)' }}>
+            <div style={{ maxWidth: '18.75rem', margin: '0 auto', padding: '1.25rem', backgroundColor: '#e68230', borderWidth: "0.25rem", borderColor: "#FFF", borderStyle: "double", borderRadius: "2.5rem", boxShadow: '0 0.25rem 0.5rem rgba(0, 0, 0, 0.2)' }}>
                 
 
                 <h2>Sign In</h2>
                 {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>} {/* Display error message */}
                 <form onSubmit={handleSubmit}>
-                    <div style={{ marginBottom: '15px' }}>
-                        <label htmlFor="username/email" style={{ display: 'block', marginBottom: '5px' }}>Username/Email</label>
+                    <div style={{ marginBottom: '0.9375rem' }}>
+                        <label htmlFor="username/email" style={{ display: 'block', marginBottom: '0.3125rem' }}>Username/Email</label>
                         <input
                             type="text"
                             id="username/email"
@@ -93,8 +93,8 @@ const Signin = () => {
                             required
                         />
                     </div>
-                    <div style={{ marginBottom: '15px' }}>
-                        <label htmlFor="password" style={{ display: 'block', marginBottom: '5px' }}>Password</label>
+                    <div style={{ marginBottom: '0.9375rem' }}>
+                        <label htmlFor="password" style={{ display: 'block', marginBottom: '0.3125rem' }}>Password</label>
                         <input
                             type="password"
                             id="password"

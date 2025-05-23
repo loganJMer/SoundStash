@@ -73,6 +73,57 @@ exports.getCollection = function(req, res) {
     res.json({ collection: collection });
 }
 
+exports.getCollectionPublic = function(req, res) {
+    const username = decodeURIComponent(req.params.username);
+    // Check if the username is provided
+    if (!username) {
+        return res.status(400).json({ error: 'Username is required' });
+    }
+
+    db.get('SELECT collection FROM users WHERE username = ?', [username], (err, row) => {
+        if (err) {
+            return res.status(500).json({ error: 'Database error' });
+        }
+        if (!row) {
+            return res.status(404).json({ error: 'User not found' });
+        }
+        let collection = [];
+        try {
+            collection = JSON.parse(row.collection || '[]');
+            res.json({ collection: collection });
+        } catch (e) {
+            return res.status(500).json({ error: 'Invalid collection data' });
+        }
+    });
+
+}
+
+exports.getWishlistPublic = function(req, res) {
+
+    const username = decodeURIComponent(req.params.username);
+    // Check if the username is provided
+    if (!username) {
+        return res.status(400).json({ error: 'Username is required' });
+    }
+
+    db.get('SELECT wishlist FROM users WHERE username = ?', [username], (err, row) => {
+        if (err) {
+            return res.status(500).json({ error: 'Database error' });
+        }
+        if (!row) {
+            return res.status(404).json({ error: 'User not found' });
+        }
+        let wishlist = [];
+        try {
+            wishlist = JSON.parse(row.wishlist || '[]');
+            res.json({ wishlist: wishlist });
+        } catch (e) {
+            return res.status(500).json({ error: 'Invalid wishlist data' });
+        }
+    });
+
+}
+
 
 exports.addAlbumWishlist = function(req, res) {
 
