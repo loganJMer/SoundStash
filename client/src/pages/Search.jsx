@@ -78,23 +78,23 @@ const Search = () => {
                     input {
                         margin-right: 0.5rem;
                         width: 25%;
-                        min-width: 100px;
-                        max-width: 300px;
+                        min-width: 6.25rem;
+                        max-width: 18.75rem;
                         padding: 0.6rem 0.5rem;
                         background: #fff;
                         color: #000;
-                        border: 1px solid #d3d3d3;
-                        border-radius: 10px;
-                        box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+                        border: 0.0625rem solid #d3d3d3;
+                        border-radius: 0.625rem;
+                        box-shadow: 0 0.125rem 0.375rem rgba(0,0,0,0.06);
                         outline: none;
                     }
                     button {
-                        padding: 10px 15px;
+                        padding: 0.625rem 0.9375rem;
                         background-color: #e37609;
                         color: #fff;
-                        border-width: 1px;
+                        border-width: 0.0625rem;
                         border-color: white;
-                        border-radius: 10px;
+                        border-radius: 0.625rem;
                         cursor: pointer;
                         transition: background-color 0.3s ease, transform 0.2s ease;
                     }   
@@ -102,7 +102,7 @@ const Search = () => {
                         background-color: #c65d07;
                         border-color: white;
                         transform: scale(1.1);
-                        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+                        box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.3);
                     }
                     a.result-link {
                         text-decoration: none;
@@ -114,11 +114,11 @@ const Search = () => {
             <div
                 style={{
                     background: '#f5b547',
-                    borderRadius: '12px',
-                    boxShadow: '0 8px 16px rgba(0,0,0,0.10), 0 4px 8px rgba(0,0,0,0.08)',
+                    borderRadius: '0.75rem',
+                    boxShadow: '0 0.5rem 1rem rgba(0,0,0,0.10), 0 0.25rem 0.5rem rgba(0,0,0,0.08)',
                     padding: '2rem',
                     width: '100%',
-                    maxWidth: '900px',
+                    maxWidth: '56.25rem',
                     margin: '0 auto 2rem auto',
                     boxSizing: 'border-box',
                 }}
@@ -161,14 +161,14 @@ const Search = () => {
                         style={{
                             marginRight: '0.5rem',
                             width: '20%',
-                            minWidth: '100px',
-                            maxWidth: '200px',
+                            minWidth: '6.25rem',
+                            maxWidth: '12.5rem',
                             padding: '0.6rem 0.5rem',
                             background: '#fff',
                             color: '#000',
-                            border: '1px solid #d3d3d3',
-                            borderRadius: '10px',
-                            boxShadow: '0 2px 6px rgba(0,0,0,0.06)',
+                            border: '0.0625rem solid #d3d3d3',
+                            borderRadius: '0.625rem',
+                            boxShadow: '0 0.125rem 0.375rem rgba(0,0,0,0.06)',
                             outline: 'none',
                         }}
                     >
@@ -194,10 +194,10 @@ const Search = () => {
             <div
                 style={{
                     display: 'grid',
-                    gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
+                    gridTemplateColumns: 'repeat(auto-fit, minmax(13.75rem, 1fr))',
                     gap: '1.5rem',
                     width: '100%',
-                    maxWidth: '1200px',
+                    maxWidth: '75rem',
                     margin: '2rem auto 0 auto',
                     boxSizing: 'border-box',
                     paddingLeft: 0,
@@ -215,13 +215,13 @@ const Search = () => {
                             <div
                                 style={{
                                     background: '#fff',
-                                    borderRadius: '10px',
-                                    boxShadow: '0 2px 8px rgba(0,0,0,0.08)',
+                                    borderRadius: '0.625rem',
+                                    boxShadow: '0 0.125rem 0.5rem rgba(0,0,0,0.08)',
                                     padding: '1rem',
                                     display: 'flex',
                                     flexDirection: 'column',
                                     alignItems: 'center',
-                                    minHeight: '260px',
+                                    minHeight: '16.25rem',
                                 }}
                             >
                                 <img
@@ -229,10 +229,10 @@ const Search = () => {
                                     alt={item.title}
                                     style={{
                                         width: '100%',
-                                        maxWidth: '180px',
-                                        height: '180px',
+                                        maxWidth: '11.25rem',
+                                        height: '11.25rem',
                                         objectFit: 'cover',
-                                        borderRadius: '8px',
+                                        borderRadius: '0.5rem',
                                         marginBottom: '1rem',
                                         background: '#f3f3f3',
                                     }}

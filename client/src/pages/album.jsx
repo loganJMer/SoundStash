@@ -207,7 +207,7 @@ const Album = () => {
         const handleResize = () => {
             if (mastersRowRef.current) {
                 const containerWidth = mastersRowRef.current.offsetWidth;
-                const itemWidth = 100 + 16; // 100px image + 16px gap
+                const itemWidth = 6.25 + 1; // 6.25rem image + 1rem gap
                 const count = Math.floor(containerWidth / itemWidth);
                 setMaxMasters(count > 0 ? count : 1);
             }
@@ -234,21 +234,21 @@ const Album = () => {
             color: '#000'
         }}>
             {albumData ? (
-                <div style={{ marginTop: '4rem', display: 'flex', alignItems: 'flex-start', background: '#fff', padding: '2rem', borderRadius: '16px', boxShadow: '0 2px 6px rgba(0,0,0,0.1)', maxWidth: '800px', color: '#000', width: '100%', maxHeight: '400px' }}>
+                <div style={{ marginTop: '4rem', display: 'flex', alignItems: 'flex-start', background: '#fff', padding: '2rem', borderRadius: '1rem', boxShadow: '0 0.125rem 0.375rem rgba(0,0,0,0.1)', maxWidth: '50rem', color: '#000', width: '100%', maxHeight: '25rem' }}>
                     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
                         <img
                             src={primaryImage}
                             alt={"Album Cover Not Found"}
                             style={{
                                 width: '100%',
-                                maxWidth: '300px',
-                                height: '300px',
+                                maxWidth: '19rem',
+                                height: '19rem',
                                 objectFit: 'cover',
-                                borderRadius: '8px',
+                                borderRadius: '0.5rem',
                                 marginBottom: '1rem',
                                 background: '#f3f3f3',
-                                boxShadow: '0 8px 24px rgba(0,0,0,0.18), 0 1.5px 4px rgba(0,0,0,0.12)',
-                                transform: 'translateY(-6px) scale(1.03)',
+                                boxShadow: '0 0.5rem 1.5rem rgba(0,0,0,0.18), 0 0.1rem 0.25rem rgba(0,0,0,0.12)',
+                                transform: 'translateY(-0.375rem) scale(1.03)',
                                 transition: 'box-shadow 0.2s, transform 0.2s'
                             }}
                         />
@@ -259,11 +259,11 @@ const Album = () => {
                                     background: '#1976d2',
                                     color: '#fff',
                                     border: 'none',
-                                    borderRadius: '4px',
+                                    borderRadius: '0.25rem',
                                     padding: '0.5rem 1rem',
                                     fontSize: '1rem',
                                     cursor: 'pointer',
-                                    boxShadow: '0 2px 6px rgba(0,0,0,0.08)',
+                                    boxShadow: '0 0.125rem 0.375rem rgba(0,0,0,0.08)',
                                     transition: 'background 0.2s'
                                 }}>
                                     View Master Release
@@ -271,11 +271,11 @@ const Album = () => {
                             </a>
                         ) : null}
                     </div>
-                    <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center', marginLeft: '10rem'}}>
+                    <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center', marginLeft: '2rem'}}>
                         <div style={{
                             display: 'inline-block',
                             verticalAlign: 'top',
-                            marginLeft: '2rem',
+                            marginLeft: '1rem',
                             color: '#000'
                         }}>
                             <h2>{albumData.title || 'Unknown Title'}</h2>
@@ -290,12 +290,12 @@ const Album = () => {
                                             background: '#d32f2f',
                                             color: '#fff',
                                             border: 'none',
-                                            borderRadius: '4px',
+                                            borderRadius: '0.25rem',
                                             padding: '0.5rem 1rem',
                                             fontSize: '1rem',
                                             cursor: 'pointer',
                                             marginBottom: '0.5rem',
-                                            boxShadow: '0 2px 6px rgba(0,0,0,0.08)',
+                                            boxShadow: '0 0.125rem 0.375rem rgba(0,0,0,0.08)',
                                             transition: 'background 0.2s'
                                         }}
                                     >
@@ -308,12 +308,12 @@ const Album = () => {
                                             background: '#388e3c',
                                             color: '#fff',
                                             border: 'none',
-                                            borderRadius: '4px',
+                                            borderRadius: '0.5rem',
                                             padding: '0.5rem 1rem',
                                             fontSize: '1rem',
                                             cursor: 'pointer',
                                             marginBottom: '0.5rem',
-                                            boxShadow: '0 2px 6px rgba(0,0,0,0.08)',
+                                            boxShadow: '0 0.125rem 0.375rem rgba(0,0,0,0.08)',
                                             transition: 'background 0.2s'
                                         }}
                                     >
@@ -329,12 +329,12 @@ const Album = () => {
                                             background: '#659df7',
                                             color: '#fff',
                                             border: 'none',
-                                            borderRadius: '4px',
+                                            borderRadius: '0.5rem',
                                             padding: '0.5rem 1rem',
                                             fontSize: '1rem',
                                             cursor: 'pointer',
                                             marginBottom: '0.5rem',
-                                            boxShadow: '0 2px 6px rgba(0,0,0,0.08)',
+                                            boxShadow: '0 0.125rem 0.375rem rgba(0,0,0,0.08)',
                                             transition: 'background 0.2s'
                                         }}
                                     >
@@ -347,12 +347,12 @@ const Album = () => {
                                             background: '#317df7',
                                             color: '#fff',
                                             border: 'none',
-                                            borderRadius: '4px',
+                                            borderRadius: '0.5rem',
                                             padding: '0.5rem 1rem',
                                             fontSize: '1rem',
                                             cursor: 'pointer',
                                             marginBottom: '0.5rem',
-                                            boxShadow: '0 2px 6px rgba(0,0,0,0.08)',
+                                            boxShadow: '0 0.125rem 0.375rem rgba(0,0,0,0.08)',
                                             transition: 'background 0.2s'
                                         }}
                                     >
@@ -361,6 +361,34 @@ const Album = () => {
                                 )}
                             </div>
                         </div>
+                        {albumData.tracklist && albumData.tracklist.length > 0 && (
+                            <div
+                                style={{
+                                    maxHeight: '18rem',
+                                    width: '15rem',
+                                    overflowY: 'auto',
+                                    background: '#fff',
+                                    borderRadius: '0.5rem',
+                                    padding: '0.5rem',
+                                    marginLeft: '1rem',
+                                    fontSize: '0.98rem'
+                                }}
+                            >
+                                <h3 style={{ marginTop: 0, marginBottom: '0.7rem', fontSize: '1.1rem' }}>Tracklist</h3>
+                                <ol style={{ paddingLeft: '1.2rem', margin: 0 }}>
+                                    {albumData.tracklist.map((track, idx) => (
+                                        <li key={idx} style={{ marginBottom: '0.5rem' }}>
+                                            <span style={{ fontWeight: 500 }}>{track.title}</span>
+                                            {track.duration && (
+                                                <span style={{ color: '#555', marginLeft: '0.5rem', fontSize: '0.95em' }}>
+                                                    {track.duration}
+                                                </span>
+                                            )}
+                                        </li>
+                                    ))}
+                                </ol>
+                            </div>
+                        )}
                     </div>
                 </div>
             ) : (
@@ -374,19 +402,19 @@ const Album = () => {
                         top: '6rem',
                         right: '4rem',
                         background: '#fff',
-                        borderRadius: '16px',
-                        boxShadow: '0 4px 18px rgba(0,0,0,0.13)',
+                        borderRadius: '1rem',
+                        boxShadow: '0 0.5rem 1.125rem rgba(0,0,0,0.13)',
                         padding: '2rem 2rem 0.5rem 2rem',
                         gap: '1.5rem',
                         width: 'auto',
-                        minHeight: '180px',
+                        minHeight: '11.25rem',
                         alignItems: 'center',
                         justifyContent: 'center'
                 }}>
                     <div style={{
                         display: 'grid',
-                        gridTemplateColumns: 'repeat(2, 130px)',
-                        gridTemplateRows: 'repeat(2, 130px)',
+                        gridTemplateColumns: 'repeat(2, 8.125rem)',
+                        gridTemplateRows: 'repeat(2, 8.125rem)',
                         gap: '1.5rem',
                         alignItems: 'center',
                         justifyContent: 'center'
@@ -397,13 +425,13 @@ const Album = () => {
                                 src={img}
                                 alt={`Album image ${idx + 1}`}
                                 style={{
-                                    width: '130px',
-                                    height: '130px',
+                                    width: '8.125rem',
+                                    height: '8.125rem',
                                     objectFit: 'cover',
-                                    borderRadius: '12px',
-                                    boxShadow: '0 8px 24px rgba(0,0,0,0.18), 0 1.5px 4px rgba(0,0,0,0.12)',
+                                    borderRadius: '0.75rem',
+                                    boxShadow: '0 0.5rem 1.5rem rgba(0,0,0,0.18), 0 0.1rem 0.5rem rgba(0,0,0,0.12)',
                                     background: '#f3f3f3',
-                                    transform: 'translateY(-4px) scale(1.04)',
+                                    transform: 'translateY(-0.5rem) scale(1.04)',
                                     transition: 'box-shadow 0.2s, transform 0.2s'
                                 }}
                             />
@@ -420,7 +448,7 @@ const Album = () => {
 
             {masters.length > 0 && albumData && albumData.artists && albumData.artists[0] && albumData.title ? (
                 <a href={`/search?artist=${encodeURIComponent(albumData.artists[0].name)}&release_title=${encodeURIComponent(albumData.title)}&type=releases`} style={{}}>
-                <div style={{ marginTop: '6rem', background: '#fff', padding: '1rem 1rem 0.01rem 1rem', borderRadius: '8px', boxShadow: '0 2px 6px rgba(0,0,0,0.1)', width: '100%', boxSizing: 'border-box' }}>
+                <div style={{ marginTop: '6rem', background: '#fff', padding: '1rem 1rem 0.01rem 1rem', borderRadius: '0.5rem', boxShadow: '0 0.125rem 0.375rem rgba(0,0,0,0.1)', width: '100%', boxSizing: 'border-box' }}>
                     <div
                         ref={mastersRowRef}
                         style={{
@@ -435,21 +463,21 @@ const Album = () => {
                     >
                         {masters.slice(0, maxMasters).map((master) => (
                             <div key={master.id} style={{
-                                width: '100px',
-                                height: '100px',
-                                flex: '0 0 100px',
+                                width: '6.25rem',
+                                height: '6.25rem',
+                                flex: '0 0 6.25rem',
                                 justifySelf: 'center'
                             }}>
                                 <img
                                     src={master.thumb || '/logo.png'}
                                     alt={"Master Cover Not Found"}
                                     style={{
-                                        width: '100px',
-                                        height: '100px',
+                                        width: '6.25rem',
+                                        height: '6.25rem',
                                         objectFit: 'cover',
-                                        borderRadius: '8px',
+                                        borderRadius: '0.5rem',
                                         display: 'block',
-                                        boxShadow: '0 2px 6px rgba(0,0,0,0.1)',
+                                        boxShadow: '0 0.125rem 0.375rem rgba(0,0,0,0.1)',
                                         transition: 'box-shadow 0.2s, transform 0.2s'
                                     }}
                                 />
