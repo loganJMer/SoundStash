@@ -8,6 +8,7 @@ const Album = () => {
     const [isMaster, setIsMaster] = useState(false)
     const [albumData, setAlbumData] = useState(null)
     const [inCollection, setInCollection] = useState(false)
+    const [inWishlist, setInWishlist] = useState(false)
     const [artistOtherAlbums, setArtistOtherAlbums] = useState([])
     const [masters, setMasters] = useState([])
     const [primaryImage, setPrimaryImage] = useState('/logo.png')
@@ -16,7 +17,7 @@ const Album = () => {
 
     const addToCollection = async () => {
         try {
-            const res = await axios.patch('/api/addAlbum', {
+            const res = await axios.patch('/api/addAlbumCollection', {
                 albumData: albumData,
                 primaryImage: primaryImage,
                 master: isMaster, 
@@ -36,7 +37,7 @@ const Album = () => {
 
     const removeFromCollection = async () => {
         try {
-            const res = await axios.patch('/api/removeAlbum', {
+            const res = await axios.patch('/api/removeAlbumCollection', {
                 albumId: albumData.id,
             })
             if (res.data.success) {
@@ -52,7 +53,43 @@ const Album = () => {
         }
     }
 
+        const addToWishlist = async () => {
+        try {
+            const res = await axios.patch('/api/addAlbumWishlist', {
+                albumData: albumData,
+                primaryImage: primaryImage,
+                master: isMaster, 
+            })
+            if (res.data.success) {
+                setInWishlist(true)
+            } else {
+                console.error('Error adding album to wishlist:', res.data.message)
+            }
+        } catch (error) {
+            console.error('Error adding album to wishlist:', error)
+            if(error.response.data.error === 'Unauthorized'){
+                window.location.href = '/signin';
+            }
+        }
+    }
 
+    const removeFromWishlist = async () => {
+        try {
+            const res = await axios.patch('/api/removeAlbumWishlist', {
+                albumId: albumData.id,
+            })
+            if (res.data.success) {
+                setInWishlist(false)
+            } else {
+                console.error('Error removing album from wishlist:', res.data.message)
+            }
+        } catch (error) {
+            console.error('Error removing album from wishlist:', error)
+            if(error.response.data.error === 'Unauthorized'){
+                window.location.href = '/signin';
+            }
+        }
+    }
 
     //gets album info and primary image
     useEffect(() => {
@@ -104,6 +141,26 @@ const Album = () => {
         checkAlbumInCollection()
     }, [albumData])
 
+    //check if album is in wishlist
+    useEffect(() => {
+        if (!albumData) return
+        const checkAlbumInWishlist = async () => {
+            try {
+                console.log(albumData.id)
+                const res = await axios.get('/api/checkAlbumInWishlist', {
+                    params: { albumId: albumData.id }
+                })
+                if (res.data.albumInWishlist) {
+                    setInWishlist(true)
+                } else {
+                    setInWishlist(false)
+                }
+            } catch (error) {
+                console.error('Error checking album in wishlist:', error)
+            }
+        }
+        checkAlbumInWishlist()
+    }, [albumData])
 
     //get other albums from artist
     //if artist is Various, do not fetch other albums
@@ -261,6 +318,45 @@ const Album = () => {
                                         }}
                                     >
                                         Add to Collection
+                                    </button>
+                                )}
+                            </div>
+                            <div style={{ marginTop: '1.5rem' }}>
+                                {inWishlist ? (
+                                    <button
+                                        onClick={removeFromWishlist}
+                                        style={{
+                                            background: '#659df7',
+                                            color: '#fff',
+                                            border: 'none',
+                                            borderRadius: '4px',
+                                            padding: '0.5rem 1rem',
+                                            fontSize: '1rem',
+                                            cursor: 'pointer',
+                                            marginBottom: '0.5rem',
+                                            boxShadow: '0 2px 6px rgba(0,0,0,0.08)',
+                                            transition: 'background 0.2s'
+                                        }}
+                                    >
+                                        Remove from Wishlist
+                                    </button>
+                                ) : (
+                                    <button
+                                        onClick={addToWishlist}
+                                        style={{
+                                            background: '#317df7',
+                                            color: '#fff',
+                                            border: 'none',
+                                            borderRadius: '4px',
+                                            padding: '0.5rem 1rem',
+                                            fontSize: '1rem',
+                                            cursor: 'pointer',
+                                            marginBottom: '0.5rem',
+                                            boxShadow: '0 2px 6px rgba(0,0,0,0.08)',
+                                            transition: 'background 0.2s'
+                                        }}
+                                    >
+                                        Add to Wishlist
                                     </button>
                                 )}
                             </div>

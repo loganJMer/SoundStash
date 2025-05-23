@@ -7,6 +7,7 @@ const discogsController = require('../controllers/discogsController');
 
 const { requireAuth } = require('../middleware/auth');
 const { getCollection } = require('../middleware/getCollection');
+const { getWishlist } = require('../middleware/getWishlist');
 
 //auth routes
 router.post('/checkUserExists', authController.checkUserExists);
@@ -16,10 +17,14 @@ router.get('/verifyToken', requireAuth, authController.verifyToken); //verify to
 router.post('/logout', authController.logout); //logout user
 
 //user routes
-router.patch('/addAlbum', requireAuth, getCollection, userController.addAlbum); //add album to user collection
-router.patch('/removeAlbum', requireAuth, getCollection, userController.removeAlbum); //remove album from user collection
+router.patch('/addAlbumCollection', requireAuth, getCollection, userController.addAlbumCollection); //add album to user collection
+router.patch('/removeAlbumCollection', requireAuth, getCollection, userController.removeAlbumCollection); //remove album from user collection
 router.get('/checkAlbumInCollection', requireAuth, getCollection, userController.checkAlbumInCollection); //add album to user collection
 router.get('/getCollection', requireAuth, getCollection, userController.getCollection); //get user collection
+router.patch('/addAlbumWishlist', requireAuth, getWishlist, userController.addAlbumWishlist); //add album to user Wishlist
+router.patch('/removeAlbumWishlist', requireAuth, getWishlist, userController.removeAlbumWishlist); //remove album from user Wishlist
+router.get('/checkAlbumInWishlist', requireAuth, getWishlist, userController.checkAlbumInWishlist); //add album to user Wishlist
+router.get('/getWishlist', requireAuth, getWishlist, userController.getWishlist); //get user Wishlist
 
 //discogs search routes
 router.get('/search', discogsController.search); //search discogs general

@@ -6,6 +6,7 @@ export const AuthContext = createContext();
 export const AuthProvider = ({ children }) => {
   const [username, setUsername] = useState(null);
   const [loggedIn, setLoggedIn] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     axios.get('/api/verifyToken', { withCredentials: true })
@@ -18,6 +19,9 @@ export const AuthProvider = ({ children }) => {
       .catch(() => {
         setLoggedIn(false);
         setUsername(null);
+      })
+      .finally(() => {
+        setLoading(false); // 👈 set when done
       });
   }, []);
 
@@ -30,7 +34,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ username, loggedIn, logout }}>
+    <AuthContext.Provider value={{ username, loggedIn, logout , loading}}>
       {children}
     </AuthContext.Provider>
   );
