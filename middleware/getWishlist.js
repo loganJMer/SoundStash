@@ -2,9 +2,9 @@ const db = require('../database');
 
 function getWishlist(req, res, next) {
 
-    const username = req.user.username;
+    const id = req.user.id;
 
-    db.get('SELECT wishlist FROM users WHERE username = ?', [username], (err, row) => {
+    db.get('SELECT wishlist FROM collections WHERE id = ?', [id], (err, row) => {
         if (err) {
             return res.status(500).json({ error: 'Database error' });
         }

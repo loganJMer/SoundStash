@@ -42,13 +42,13 @@ const Signup = () => {
             return
         }
         console.log("Formatting valid. Checking if user already exists")
-	
-        const res = await axios.get('/api/checkUserExists', {
-            params: {
-            username: username,
-            email: email,
-            },
+        console.log("Username: " + username)
+        console.log("Email: " + email)
+        const res = await axios.post('/api/checkUserExists', {
+            username, 
+            email
         });
+        
         let conflict = res.data.conflict
         if(conflict === "username"){
             console.log("Username taken. Redirecting with context")
@@ -160,7 +160,7 @@ const Signup = () => {
                     </button>
                 </form>
                 <p style={{ textAlign: 'center' }}>Already have an account?</p>
-                <a href='/signin' style={{ color: 'white'}} class>Click here to sign in</a>
+                <a href='/signin' style={{ color: 'white'}}>Click here to sign in</a>
             </div>
         </div>
     );

@@ -3,8 +3,8 @@ const jwt = require('jsonwebtoken');
 
 exports.checkUserExists = function (req, res){
 
-	const username = req.query.username
-	const email = req.query.email
+	const username = req.body.username
+	const email = req.body.email
 	//check database users table for user
 	db.get("SELECT 1 FROM users WHERE username = ? LIMIT 1", [username], function (err, row) {
         if (row) {
@@ -31,6 +31,12 @@ exports.addUser = function (req, res){
             return res.status(500).json({ success: false });
         }
 		res.json({success: true})
+		db.run("INSERT INTO collections DEFAULT VALUES", function(err2) {
+			if (err2) {
+				console.error(err2.message);
+			}
+		});
+		
 	});
 }
 
@@ -40,9 +46,13 @@ exports.signin = function (req, res) {
 	let authorized = false
 	if(!usernameEmail.includes("@")){
 		const username = usernameEmail
-		db.all("SELECT username, password FROM users", function(err, rows){
+		
+		db.all("SELECT id, username, password FROM users", function(err, rows){
 		for(let i=0; i<rows.length; i++){
-				if(rows[i].username === username & rows[i].password === password) authorized = true;
+				if(rows[i].username === username & rows[i].password === password){
+					authorized = true;
+					var id = rows[i].id
+				} 
 		}
 		if(!authorized){
 			return res.json({auth: false})
@@ -50,7 +60,7 @@ exports.signin = function (req, res) {
 		} else{
 
 			// Generate JWT with the secret key from environment variables
-			const token = jwt.sign({username: username}, process.env.JWT_SECRET, { expiresIn: '31d' });  // expires in 31 day
+			const token = jwt.sign({username: username, id: id}, process.env.JWT_SECRET, { expiresIn: '31d' });  // expires in 31 day
 
 			// Set the token as an HTTP-only cookie
 			res.cookie('auth_token', token, {
@@ -64,11 +74,12 @@ exports.signin = function (req, res) {
 		});
 	} else{
 		const email = usernameEmail
-		db.all("SELECT username, email, password FROM users", function(err, rows){
+		db.all("SELECT id, username, email, password FROM users", function(err, rows){
 			for(let i=0; i<rows.length; i++){
 					if(rows[i].email == email & rows[i].password == password) {
 						authorized = true;
 						var username = rows[i].username;
+						var id = rows[i].id
 						break;
 					}
 			}
@@ -77,7 +88,7 @@ exports.signin = function (req, res) {
 				
 			} else{
 				
-				const token = jwt.sign({username: username}, process.env.JWT_SECRET, { expiresIn: '31d' });  // expires in 31 day
+				const token = jwt.sign({username: username,id: id}, process.env.JWT_SECRET, { expiresIn: '31d' });  // expires in 31 day
 
 			// Set the token as an HTTP-only cookie
 				res.cookie('auth_token', token, {
@@ -94,10 +105,11 @@ exports.signin = function (req, res) {
 
 exports.verifyToken = function (req, res) {
 	const username = req.user.username;
+	const userId = req.user.userId;
 	if(username == null){
 		return res.json({ valid: false });
 	}
-	res.json({ valid: true, username: username });
+	res.json({ valid: true, username: username, userId: userId });
 }
 
 exports.logout = function (req, res) {

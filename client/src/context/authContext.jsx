@@ -5,6 +5,7 @@ export const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
   const [username, setUsername] = useState(null);
+  const [userId, setUserId] = useState(null);
   const [loggedIn, setLoggedIn] = useState(false);
   const [loading, setLoading] = useState(true);
 
@@ -14,6 +15,7 @@ export const AuthProvider = ({ children }) => {
         if (res.data.valid) {
           setLoggedIn(true);
           setUsername(res.data.username);
+          setUserId(res.data.userId);
         }
       })
       .catch(() => {

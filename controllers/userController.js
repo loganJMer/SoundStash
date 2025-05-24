@@ -2,7 +2,7 @@ const db = require('../database');
 
 exports.addAlbumCollection = function(req, res) {
 
-    const username = req.user.username;
+    const id = req.user.id;
     const albumData = req.body.albumData;
     const primaryImage = req.body.primaryImage;
     const isMaster = req.body.isMaster;
@@ -25,8 +25,8 @@ exports.addAlbumCollection = function(req, res) {
     // Add the album to the collection
     collection.push(album);
     let collectionString = JSON.stringify(collection);
-    const sql = "UPDATE users SET collection = ? WHERE username = ?";
-    db.run(sql, [collectionString, username], function(err) {
+    const sql = "UPDATE collections SET collection = ? WHERE id = ?";
+    db.run(sql, [collectionString, id], function(err) {
         if (err) {
             console.error(err.message);
             return res.status(500).json({ error: 'Database error' });
@@ -39,7 +39,7 @@ exports.addAlbumCollection = function(req, res) {
 
 exports.removeAlbumCollection = function(req, res) {
 
-    const username = req.user.username;
+    const id = req.user.id;
     const albumId = req.body.albumId;
     let collection = req.collection;
 
@@ -50,8 +50,8 @@ exports.removeAlbumCollection = function(req, res) {
     // Remove the album from the collection
     collection.splice(albumIndex, 1);
     let collectionString = JSON.stringify(collection);
-    const sql = "UPDATE users SET collection = ? WHERE username = ?";
-    db.run(sql, [collectionString, username], function(err) {
+    const sql = "UPDATE users SET collection = ? WHERE id = ?";
+    db.run(sql, [collectionString, id], function(err) {
         if (err) {
             console.error(err.message);
             return res.status(500).json({ error: 'Database error' });
@@ -80,22 +80,31 @@ exports.getCollectionPublic = function(req, res) {
         return res.status(400).json({ error: 'Username is required' });
     }
 
-    db.get('SELECT collection FROM users WHERE username = ?', [username], (err, row) => {
+    db.get ('SELECT id FROM users WHERE username = ?', [username], (err, row) => {
         if (err) {
             return res.status(500).json({ error: 'Database error' });
         }
         if (!row) {
             return res.status(404).json({ error: 'User not found' });
         }
-        let collection = [];
-        try {
-            collection = JSON.parse(row.collection || '[]');
-            res.json({ collection: collection });
-        } catch (e) {
-            return res.status(500).json({ error: 'Invalid collection data' });
-        }
+        let id = row.id;
+        // Fetch the collection for the user
+        db.get('SELECT collection FROM collections WHERE id = ?', [id], (err, row) => {
+            if (err) {
+                return res.status(500).json({ error: 'Database error' });
+            }
+            if (!row) {
+                return res.status(404).json({ error: 'User not found' });
+            }
+            let collection = [];
+            try {
+                collection = JSON.parse(row.collection || '[]');
+                res.json({ collection: collection });
+            } catch (e) {
+                return res.status(500).json({ error: 'Invalid collection data' });
+            }
+        });
     });
-
 }
 
 exports.getWishlistPublic = function(req, res) {
@@ -105,29 +114,37 @@ exports.getWishlistPublic = function(req, res) {
     if (!username) {
         return res.status(400).json({ error: 'Username is required' });
     }
-
-    db.get('SELECT wishlist FROM users WHERE username = ?', [username], (err, row) => {
+    db.get ('SELECT id FROM users WHERE username = ?', [username], (err, row) => {
         if (err) {
             return res.status(500).json({ error: 'Database error' });
         }
         if (!row) {
             return res.status(404).json({ error: 'User not found' });
         }
-        let wishlist = [];
-        try {
-            wishlist = JSON.parse(row.wishlist || '[]');
-            res.json({ wishlist: wishlist });
-        } catch (e) {
-            return res.status(500).json({ error: 'Invalid wishlist data' });
-        }
+        let id = row.id;
+        // Fetch the collection for the user
+        db.get('SELECT wishlist FROM collections WHERE id = ?', [id], (err, row) => {
+            if (err) {
+                return res.status(500).json({ error: 'Database error' });
+            }
+            if (!row) {
+                return res.status(404).json({ error: 'User not found' });
+            }
+            let wishlist = [];
+            try {
+                wishlist = JSON.parse(row.wishlist || '[]');
+                res.json({ wishlist: wishlist });
+            } catch (e) {
+                return res.status(500).json({ error: 'Invalid wishlist data' });
+            }
+        });
     });
-
 }
 
 
 exports.addAlbumWishlist = function(req, res) {
 
-    const username = req.user.username;
+    const id = req.user.id;
     const albumData = req.body.albumData;
     const primaryImage = req.body.primaryImage;
     const isMaster = req.body.isMaster;
@@ -150,8 +167,8 @@ exports.addAlbumWishlist = function(req, res) {
     // Add the album to the wishlist
     wishlist.push(album);
     let wishlistString = JSON.stringify(wishlist);
-    const sql = "UPDATE users SET wishlist = ? WHERE username = ?";
-    db.run(sql, [wishlistString, username], function(err) {
+    const sql = "UPDATE users SET wishlist = ? WHERE id = ?";
+    db.run(sql, [wishlistString, id], function(err) {
         if (err) {
             console.error(err.message);
             return res.status(500).json({ error: 'Database error' });
@@ -164,7 +181,7 @@ exports.addAlbumWishlist = function(req, res) {
 
 exports.removeAlbumWishlist = function(req, res) {
 
-    const username = req.user.username;
+    const id = req.user.id;
     const albumId = req.body.albumId;
     let wishlist = req.wishlist;
 
@@ -175,8 +192,8 @@ exports.removeAlbumWishlist = function(req, res) {
     // Remove the album from the wishlist
     wishlist.splice(albumIndex, 1);
     let wishlistString = JSON.stringify(wishlist);
-    const sql = "UPDATE users SET wishlist = ? WHERE username = ?";
-    db.run(sql, [wishlistString, username], function(err) {
+    const sql = "UPDATE users SET wishlist = ? WHERE id = ?";
+    db.run(sql, [wishlistString, id], function(err) {
         if (err) {
             console.error(err.message);
             return res.status(500).json({ error: 'Database error' });
